@@ -13,7 +13,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public List<Category> listCategories() {
+    public List<Category> listCategoriesServer() {
         return categoryRepository.findAll();
     }
 

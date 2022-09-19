@@ -14,8 +14,8 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/categories")
-    public String readCategories(Model model) {
-        List<Category> categories = categoryService.listCategories();
+    public String readCategoriesServer(Model model) {
+        List<Category> categories = categoryService.listCategoriesServer();
         model.addAttribute("categories", categories);
         return "categories/categoryList";
     }
