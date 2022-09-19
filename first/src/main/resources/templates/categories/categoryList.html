@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div th:replace="fragments/sidebar :: sidebar"/>
+    <div class="col-md-9">
+        <table class="table table-light table-striped">
+            <thead>
+            <tr>
+                <th>#</th> <th>이름</th> <th>소개</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category : ${categories}">
+                <td th:text="${category.id}"></td>
+                <td th:text="${category.name}"></td>
+                <td th:text="${category.definition}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

@@ -1,8 +1,11 @@
 package graduation.first.category;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class Category {
 
     @Id @Column(name = "category_id")
