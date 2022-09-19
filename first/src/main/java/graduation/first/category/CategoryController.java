@@ -24,6 +24,9 @@ public class CategoryController {
 
     @PostMapping("/category/new")
     public String createCategory(@Valid CategoryForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "categories/categoryForm";
+        }
         Category category = categoryService.createCategory(form);
         return "redirect:/categories/categoryList";
     }
