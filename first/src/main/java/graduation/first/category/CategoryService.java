@@ -13,7 +13,15 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public List<Category> listCategoriesServer() {
+    public Category createCategory(CategoryForm categoryForm) {
+        Category category = Category.builder()
+                .name(categoryForm.getName())
+                .definition(categoryForm.getDefinition())
+                .build();
+        return categoryRepository.save(category);
+    }
+
+    public List<Category> listCategoriesForAdmin() {
         return categoryRepository.findAll();
     }
 
