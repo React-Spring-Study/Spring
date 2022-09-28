@@ -13,7 +13,8 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public Category saveCategory(CategoryForm categoryForm) {
+    @Transactional
+    public Category saveCategory(@org.jetbrains.annotations.NotNull CategoryForm categoryForm) {
         Category category = Category.builder()
                 .name(categoryForm.getName())
                 .definition(categoryForm.getDefinition())
@@ -21,16 +22,19 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
+    @Transactional
     public List<Category> listCategoriesForAdmin() {
         return categoryRepository.findAll();
     }
 
+    @Transactional
     public Category findOne(Long categoryId) {
         Category one = categoryRepository.findById(categoryId).
                 orElseThrow(() -> new RuntimeException());
         return one;
     }
 
+    @Transactional
     public CategoryForm updateCategoryForm(Long categoryId) {
 
         Category category = findOne(categoryId);
@@ -39,5 +43,11 @@ public class CategoryService {
         form.setName(category.getName());
         form.setDefinition(category.getDefinition());
         return form;
+    }
+
+    @Transactional
+    public void removeCategory(Long categoryId) {
+        Category findOne = categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException());
+        categoryRepository.delete(findOne);
     }
 }
