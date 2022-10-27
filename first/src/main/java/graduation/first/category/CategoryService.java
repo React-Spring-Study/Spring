@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Service
@@ -14,7 +15,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public Category saveCategory(@org.jetbrains.annotations.NotNull CategoryForm categoryForm) {
+    public Category saveCategory(@NotNull CategoryForm categoryForm) {
         Category category = Category.builder()
                 .name(categoryForm.getName())
                 .definition(categoryForm.getDefinition())
