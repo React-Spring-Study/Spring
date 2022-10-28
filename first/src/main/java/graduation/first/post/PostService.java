@@ -3,6 +3,7 @@ package graduation.first.post;
 import graduation.first.category.Category;
 import graduation.first.category.CategoryRepository;
 import graduation.first.user.User;
+import graduation.first.user.UserInfo;
 import graduation.first.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,16 @@ public class PostService {
         Post saveOne = postRepository.save(post);
 
         return saveOne.getId();
+    }
+
+    @Transactional
+    public PostResponseDto readOnePost(Long postId) {
+        Post findOne = postRepository.findById(postId).orElseThrow(() -> new RuntimeException());
+        User writer = findOne.getWriter();
+        return new PostResponseDto(findOne.getId(),
+                findOne.getTitle(),
+                findOne.getContent(),
+                new UserInfo(writer.getId(), writer.getName(), writer.getLoginId()),
+                findOne.getCategory().getId());
     }
 }
