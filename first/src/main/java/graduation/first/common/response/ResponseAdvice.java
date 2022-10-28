@@ -1,4 +1,4 @@
-package graduation.first.global.common.response;
+package graduation.first.common.response;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

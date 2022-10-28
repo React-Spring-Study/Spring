@@ -1,4 +1,4 @@
-package graduation.first.global.common.response;
+package graduation.first.common.response;
 
 public class ResponseUtil {
 
