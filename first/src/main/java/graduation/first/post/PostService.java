@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class PostService {
 
     private PostRepository postRepository;
     private CategoryRepository categoryRepository;
     private UserRepository userRepository;
 
+    @Transactional
     public Long savePost(PostSaveRequestDto saveDto) {
         Category category = categoryRepository.findById(saveDto.getCategory_id()).orElseThrow(() -> new RuntimeException());
         User writer = userRepository.findById(saveDto.getWriter_id()).orElseThrow(() -> new RuntimeException());
