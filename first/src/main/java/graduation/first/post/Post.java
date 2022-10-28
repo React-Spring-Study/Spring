@@ -2,14 +2,16 @@ package graduation.first.post;
 
 import graduation.first.category.Category;
 import graduation.first.user.User;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)

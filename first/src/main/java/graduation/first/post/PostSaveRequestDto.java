@@ -1,13 +1,16 @@
 package graduation.first.post;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostSaveRequestDto {
 
     @NotEmpty
@@ -17,8 +20,8 @@ public class PostSaveRequestDto {
     private String content;
 
     @NotNull
-    private Long category_id;
+    private Long categoryId;
 
     @NotNull
-    private Long writer_id;
+    private Long writerId;
 }
