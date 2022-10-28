@@ -1,6 +1,7 @@
 package graduation.first.post;
 
 import graduation.first.category.Category;
+import graduation.first.user.User;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -20,5 +21,9 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "writer_id")
+    private User writer;
 
 }
