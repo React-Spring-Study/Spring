@@ -28,6 +28,8 @@ public class PostService {
                 .writer(writer)
                 .build();
 
-        return postRepository.save(post).getId();
+        Post saveOne = postRepository.save(post);
+
+        return saveOne.getId();
     }
 }
