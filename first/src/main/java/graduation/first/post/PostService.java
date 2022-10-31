@@ -41,7 +41,7 @@ public class PostService {
         return new PostResponseDto(findOne.getId(),
                 findOne.getTitle(),
                 findOne.getContent(),
-                new UserInfo(writer.getId(), writer.getName(), writer.getLoginId()),
+                new UserInfo(writer.getId(), writer.getName(), writer.getEmail()),
                 findOne.getCategory().getId());
     }
 }
