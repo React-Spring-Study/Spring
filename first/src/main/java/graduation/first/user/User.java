@@ -17,12 +17,14 @@ public class User {
     private String profileImg;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String provider;
 
     @Builder
-    public User (String name, String email, String profileImg, Role role) {
+    public User (String name, String email, String profileImg, Role role, String provider) {
         this.name = name;
         this.email = email;
         this.profileImg = profileImg;
         this.role = role;
+        this.provider = provider;
     }
 }
