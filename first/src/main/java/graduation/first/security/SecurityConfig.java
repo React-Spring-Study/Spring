@@ -14,19 +14,19 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public final DefaultOAuth2UserService defaultOAuth2UserService;
+    public final PrincipalOAuth2UserService principalOAuth2UserService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().headers().frameOptions().disable();
         http.authorizeRequests()
-                .antMatchers("/post/**").authenticated()
+                .antMatchers("/post/**").hasRole("USER")
                 .anyRequest().permitAll()
 
                 .and()
                 .oauth2Login()
                 .userInfoEndpoint()
-                .userService(defaultOAuth2UserService);
+                .userService(principalOAuth2UserService);
 
     }
 }

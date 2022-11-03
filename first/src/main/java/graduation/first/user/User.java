@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     private String email;
@@ -18,13 +18,15 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private String provider;
+    private String providerId;
 
     @Builder
-    public User (String name, String email, String profileImg, Role role, String provider) {
+    public User (String name, String email, String profileImg, Role role, String provider, String providerId) {
         this.name = name;
         this.email = email;
         this.profileImg = profileImg;
         this.role = role;
         this.provider = provider;
+        this.providerId = providerId;
     }
 }
