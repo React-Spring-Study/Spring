@@ -1,5 +1,6 @@
 package graduation.first.user;
 
+import graduation.first.oauth.entity.Provider;
 import graduation.first.oauth.entity.Role;
 import lombok.*;
 
@@ -18,11 +19,11 @@ public class User {
     private String profileImg;
     @Enumerated(EnumType.STRING)
     private Role role;
-    private String provider;
+    private Provider provider;
     private String providerId;
 
     @Builder
-    public User (String name, String email, String profileImg, Role role, String provider, String providerId) {
+    public User (String name, String email, String profileImg, Role role, Provider provider, String providerId) {
         this.name = name;
         this.email = email;
         this.profileImg = profileImg;
