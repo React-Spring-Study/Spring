@@ -22,13 +22,10 @@ public class AuthTokenProvider {
 
     private final Key key;
     private static final String AUTHORITIES_KEY = "role";
-    private PrincipalOAuth2UserService principalOAuth2UserService;
 
-    @Autowired
-    public AuthTokenProvider(String secret, PrincipalOAuth2UserService principalOAuth2UserService) {
+    public AuthTokenProvider(String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.principalOAuth2UserService = principalOAuth2UserService;
-    }
+        }
 
     public AuthToken createAuthToken(String id, Date expiry) {
         return new AuthToken(id, expiry, key);
