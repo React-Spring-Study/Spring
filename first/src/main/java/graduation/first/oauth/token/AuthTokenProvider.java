@@ -1,11 +1,9 @@
 package graduation.first.oauth.token;
 
-import graduation.first.oauth.exception.exception.TokenValidFailedToken;
-import graduation.first.security.PrincipalOAuth2UserService;
+import graduation.first.oauth.exception.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -53,7 +51,7 @@ public class AuthTokenProvider {
 
             return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
         } else {
-            throw new TokenValidFailedToken();
+            throw new TokenValidFailedException();
         }
     }
 
