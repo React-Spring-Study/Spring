@@ -1,5 +1,6 @@
 package graduation.first.user;
 
+import graduation.first.oauth.entity.Role;
 import lombok.*;
 
 import javax.persistence.*;

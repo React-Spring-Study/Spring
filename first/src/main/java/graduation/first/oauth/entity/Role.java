@@ -1,4 +1,4 @@
-package graduation.first.user;
+package graduation.first.oauth.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
