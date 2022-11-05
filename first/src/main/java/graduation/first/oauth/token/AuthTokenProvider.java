@@ -1,6 +1,6 @@
 package graduation.first.oauth.token;
 
-import graduation.first.oauth.token.exception.TokenValidFailedToken;
+import graduation.first.oauth.exception.exception.TokenValidFailedToken;
 import graduation.first.security.PrincipalOAuth2UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;

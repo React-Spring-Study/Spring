@@ -1,4 +1,4 @@
-package graduation.first.oauth.token.exception;
+package graduation.first.oauth.exception.exception;
 
 public class TokenValidFailedToken extends RuntimeException {
 }
