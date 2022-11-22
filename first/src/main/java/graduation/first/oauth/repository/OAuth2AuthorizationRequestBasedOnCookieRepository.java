@@ -1,5 +1,6 @@
 package graduation.first.oauth.repository;
 
+import graduation.first.common.utils.CookieUtil;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
@@ -31,5 +32,11 @@ public class OAuth2AuthorizationRequestBasedOnCookieRepository implements Author
     @Override
     public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request, HttpServletResponse response) {
         return AuthorizationRequestRepository.super.removeAuthorizationRequest(request, response);
+    }
+
+    public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response) {
+        CookieUtil.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+        CookieUtil.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
     }
 }
