@@ -110,8 +110,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 new Date(now.getTime() + refreshTokenExpiry)
         );
 
-        /** 액세스 토큰이랑 리프레시 토큰에 들어갈 정보(-> 이메일) */
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserEmail(userInfo.getEmail());
+        /** 액세스 토큰이랑 리프레시 토큰에 들어갈 정보 */
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userInfo.getId());
         if(userRefreshToken != null) {
             userRefreshToken.setRefreshToken(refreshToken.getToken());
         } else {
