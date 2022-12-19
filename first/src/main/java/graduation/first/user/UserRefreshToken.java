@@ -1,11 +1,10 @@
 package graduation.first.user;
 
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -14,16 +13,23 @@ import javax.persistence.Id;
 @Entity
 public class UserRefreshToken {
 
+    @JsonIgnore
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long tokenId;
+    @Column(name = "refresh_token_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long refreshTokenId;
 
-    private String userEmail;
 
+    @Column(name="user_id", unique = true)
+    @NotNull
+    private String userId;
+
+    @Column(name="refresh_token")
+    @NotNull
     private String refreshToken;
 
-    public UserRefreshToken(String userEmail, String refreshToken) {
-        this.userEmail = userEmail;
+    public UserRefreshToken(String userId, String refreshToken) {
+        this.userId = userId;
         this.refreshToken = refreshToken;
     }
 }
