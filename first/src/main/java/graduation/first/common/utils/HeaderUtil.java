@@ -1,4 +1,4 @@
-package graduation.first.oauth.token;
+package graduation.first.common.utils;
 
 import javax.servlet.http.HttpServletRequest;
 

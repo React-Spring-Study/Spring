@@ -8,7 +8,7 @@ import graduation.first.oauth.entity.Role;
 import graduation.first.oauth.entity.UserPrincipal;
 import graduation.first.oauth.token.AuthToken;
 import graduation.first.oauth.token.AuthTokenProvider;
-import graduation.first.oauth.token.HeaderUtil;
+import graduation.first.common.utils.HeaderUtil;
 import graduation.first.user.UserRefreshToken;
 import graduation.first.user.UserRefreshTokenRepository;
 import io.jsonwebtoken.Claims;
