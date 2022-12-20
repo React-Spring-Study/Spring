@@ -63,8 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
-                .csrf().disable().
-                headers().frameOptions().disable()
+                .headers().frameOptions().disable()
 
                 .and()
                 .csrf().disable()
@@ -80,10 +79,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/post/**", "/users").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
                 .anyRequest().authenticated()
-
-                .and()
-                .logout()
-                .logoutSuccessUrl("/")
 
                 .and()
                 .oauth2Login()
@@ -152,6 +147,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
         corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
         corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
+        corsConfig.setAllowCredentials(true);
         corsConfig.setMaxAge(corsProperties.getMaxAge());
 
         corsConfigurationSource.registerCorsConfiguration("/**", corsConfig);

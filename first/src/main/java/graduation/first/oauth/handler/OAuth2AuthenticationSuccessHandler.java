@@ -99,7 +99,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Role role = hasAuthority(authorities, Role.ADMIN.getCode()) ? Role.ADMIN : Role.USER;
 
         Date now = new Date();
-        AuthToken accessToken = tokenProvider.createAuthToken(userInfo.getId(),
+        AuthToken accessToken = tokenProvider.createAuthToken(
+                userInfo.getId(),
                 role.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry()));
 
@@ -110,16 +111,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 new Date(now.getTime() + refreshTokenExpiry)
         );
 
-        /** 액세스 토큰이랑 리프레시 토큰에 들어갈 정보 */
+        /** 액세스 토큰이랑 리프레시 토큰에 들어갈 정보, DB 저장 */
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userInfo.getId());
         if(userRefreshToken != null) {
             userRefreshToken.setRefreshToken(refreshToken.getToken());
         } else {
-            userRefreshToken = new UserRefreshToken(userInfo.getEmail(), refreshToken.getToken());
+            userRefreshToken = new UserRefreshToken(userInfo.getId(), refreshToken.getToken());
             userRefreshTokenRepository.save(userRefreshToken);
         }
 
-        int cookieMaxAge = (int) refreshTokenExpiry;
+        int cookieMaxAge = (int) refreshTokenExpiry/60;
 
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
@@ -140,7 +141,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 return true;
             }
         }
-
         return false;
     }
 }

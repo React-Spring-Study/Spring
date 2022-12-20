@@ -19,11 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User user = super.loadUser(userRequest);
@@ -42,11 +42,11 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
         Provider provider = Provider.valueOf(request.getClientRegistration().getClientId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(provider, user.getAttributes());
-        User savedUser = userRepository.findByProviderId(userInfo.getId());
+        User savedUser = userRepository.findByUserId(userInfo.getId());
 
         if (savedUser != null) {
             if (savedUser.getProvider() != provider)
-                throw new RuntimeException();
+                throw new RuntimeException(); //TODO: OAuthProviderMissMatchException 처리
             updateUser(savedUser, userInfo);
         } else {
             savedUser = createUser(userInfo, provider);
@@ -60,9 +60,9 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
         User newUser = User.builder()
                 .name(userInfo.getName())
                 .email(userInfo.getEmail())
+                .emailVerifiedYn("Y")
                 .profileImg(userInfo.getImgUrl())
                 .provider(provider)
-                .providerId(userInfo.getId())
                 .role(Role.USER)
                 .build();
 

@@ -19,7 +19,6 @@ public class UserRefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long refreshTokenId;
 
-
     @Column(name="user_id", unique = true)
     @NotNull
     private String userId;

@@ -17,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -38,6 +39,7 @@ public class AuthController {
     private final static String REFRESH_TOKEN = "refresh_token";
 
     @PostMapping("/login")
+    @Transactional
     public ApiResponse login(HttpServletRequest request,
                              HttpServletResponse response,
                              @RequestBody AuthReqModel authReqModel) {
@@ -51,7 +53,8 @@ public class AuthController {
         String userId = authReqModel.getId();
         SecurityContextHolder.getContext().setAuthentication(authentication);
         Date now = new Date();
-        AuthToken accessToken = tokenProvider.createAuthToken(userId,
+        AuthToken accessToken = tokenProvider.createAuthToken(
+                userId,
                 ((UserPrincipal) authentication.getPrincipal()).getRole().getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
@@ -67,6 +70,7 @@ public class AuthController {
         if (userRefreshToken == null) {
             // 없으면 새로 등록
             userRefreshToken = new UserRefreshToken(userId, refreshToken.getToken());
+            userRefreshTokenRepository.save(userRefreshToken);
         } else {
             // DB에 refresh token 업데이트
             userRefreshToken.setRefreshToken(refreshToken.getToken());
@@ -80,6 +84,7 @@ public class AuthController {
     }
 
     @GetMapping("/refresh")
+    @Transactional
     public ApiResponse refreshToken(HttpServletRequest request, HttpServletResponse response) {
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);

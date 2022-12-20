@@ -92,7 +92,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
     public static UserPrincipal create(User user) {
         return new UserPrincipal(
-                user.getProviderId(),
+                user.getUserId(),
                 "pw1234",
                 user.getProvider(),
                 Role.USER,
