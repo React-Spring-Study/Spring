@@ -55,12 +55,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.csrf().disable().headers().frameOptions().disable();
+        http.csrf().disable().headers().frameOptions().disable();
 
         http.cors()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+                .and()
+                .csrf().disable().
+                headers().frameOptions().disable()
 
                 .and()
                 .csrf().disable()
@@ -71,11 +75,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(tokenAccessDeniedHandler)
 
                 .and()
-                .authorizeRequests()
+                .authorizeRequests().antMatchers("/", "/auth/login").permitAll()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/post/**").hasAnyAuthority(Role.USER.getCode())
+                .antMatchers("/post/**", "/users").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
                 .anyRequest().authenticated()
+
+                .and()
+                .logout()
+                .logoutSuccessUrl("/")
 
                 .and()
                 .oauth2Login()
