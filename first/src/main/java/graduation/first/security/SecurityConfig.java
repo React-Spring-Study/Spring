@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(tokenAccessDeniedHandler)
 
                 .and()
-                .authorizeRequests().antMatchers("/", "/auth/login").permitAll()
+                .authorizeRequests().antMatchers("/", "/auth/login", "/login/**", "/oauth2/**").permitAll()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/post/**", "/users").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
