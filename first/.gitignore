@@ -6,7 +6,11 @@ build/
 !**/src/test/**/build/
 **/.yml
 **/.properties
+<<<<<<< HEAD
 **.html
+=======
+src/main/resources/static/
+>>>>>>> 9202c8b (docs:> fix .gitignore)
 
 ### STS ###
 .apt_generated
