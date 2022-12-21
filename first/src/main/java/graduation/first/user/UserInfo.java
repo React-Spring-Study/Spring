@@ -9,5 +9,10 @@ public class UserInfo {
 
     private Long id;
     private String name;
-    private String loginId;
+    private String email;
+    private String profileImg;
+
+    public static UserInfo toResponseDto(User user) {
+        return new UserInfo(user.getId(), user.getName(), user.getEmail(), user.getProfileImg());
+    }
 }

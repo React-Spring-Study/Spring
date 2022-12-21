@@ -8,6 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PostResponseDto {
 
+    // 하나씩 조회할 때 사용
+
     private Long id;
     private String title;
     private String content;

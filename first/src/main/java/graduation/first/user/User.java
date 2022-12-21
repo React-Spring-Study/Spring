@@ -24,6 +24,7 @@ public class User {
     private String profileImg;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @Enumerated(EnumType.STRING)
     private Provider provider;
 
     @Builder
