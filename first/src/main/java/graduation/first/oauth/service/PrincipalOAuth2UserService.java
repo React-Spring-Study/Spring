@@ -3,6 +3,8 @@ package graduation.first.oauth.service;
 import graduation.first.oauth.entity.Provider;
 import graduation.first.oauth.entity.Role;
 import graduation.first.oauth.entity.UserPrincipal;
+import graduation.first.oauth.exception.OAuthErrorCode;
+import graduation.first.oauth.exception.OAuthException;
 import graduation.first.oauth.info.OAuth2UserInfo;
 import graduation.first.oauth.info.OAuth2UserInfoFactory;
 import graduation.first.user.User;
@@ -46,7 +48,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 
         if (savedUser != null) {
             if (savedUser.getProvider() != provider)
-                throw new RuntimeException(); //TODO: OAuthProviderMissMatchException 처리
+                throw new OAuthException(OAuthErrorCode.O_AUTH_PROVIDER_MISS_MATCH);
             updateUser(savedUser, userInfo);
         } else {
             savedUser = createUser(userInfo, provider);
