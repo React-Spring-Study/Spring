@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -34,6 +36,14 @@ public class PostService {
         Post saveOne = postRepository.save(post);
 
         return saveOne.getId();
+    }
+
+    @Transactional
+    public PostListVO readPostsByCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException());
+        List<Post> postList = postRepository.findAllByCategory(category);
+        return PostListVO.toResponseDto(postList);
     }
 
     @Transactional
