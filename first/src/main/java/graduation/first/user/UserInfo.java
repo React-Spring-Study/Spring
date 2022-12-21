@@ -12,7 +12,7 @@ public class UserInfo {
     private String email;
     private String profileImg;
 
-    public UserInfo toResponseDto(User user) {
+    public static UserInfo toResponseDto(User user) {
         return new UserInfo(user.getId(), user.getName(), user.getEmail(), user.getProfileImg());
     }
 }
