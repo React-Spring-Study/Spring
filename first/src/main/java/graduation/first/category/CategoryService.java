@@ -31,7 +31,7 @@ public class CategoryService {
     @Transactional
     public Category findOne(Long categoryId) {
         Category one = categoryRepository.findById(categoryId).
-                orElseThrow(() -> new RuntimeException());
+                orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         return one;
     }
 
@@ -48,7 +48,8 @@ public class CategoryService {
 
     @Transactional
     public void removeCategory(Long categoryId) {
-        Category findOne = categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException());
+        Category findOne = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         categoryRepository.delete(findOne);
     }
 }
