@@ -38,7 +38,8 @@ public class PostService {
 
     @Transactional
     public PostResponseDto readOnePost(Long postId) {
-        Post findOne = postRepository.findById(postId).orElseThrow(() -> new RuntimeException());
+        Post findOne = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
         User writer = findOne.getWriter();
         return new PostResponseDto(findOne.getId(),
                 findOne.getTitle(),
