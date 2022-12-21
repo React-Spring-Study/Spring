@@ -47,4 +47,13 @@ public class PostService {
                 new UserInfo(writer.getId(), writer.getName(), writer.getEmail(), writer.getProfileImg()),
                 findOne.getCategory().getId());
     }
+
+    @Transactional
+    public Long updatePost(Long postId, PostUpdateRequestDto updateDto) {
+        Post findOne = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
+        Category category = categoryRepository.findByName(updateDto.getCategoryName());
+        findOne.update(updateDto.getTitle(), updateDto.getContent(), category);
+        return postId;
+    }
 }

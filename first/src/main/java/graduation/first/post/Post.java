@@ -37,4 +37,10 @@ public class Post {
         this.writer = writer;
     }
 
+    public void update(String title, String content, Category category) {
+        this.title = title != null? title : this.title;
+        this.content = content != null? content : this.content;
+        this.category = category != null? category : this.category;
+    }
+
 }
