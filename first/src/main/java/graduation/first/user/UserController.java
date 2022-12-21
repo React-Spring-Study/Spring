@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping("/me/posts")
-    public PostListVO getMyposts() {
+    public PostListVO getMyPosts() {
         User user = findLoggingInUser();
         List<Post> myPostLists = userService.getMyPostLists(user);
         return PostListVO.toResponseDto(myPostLists);
