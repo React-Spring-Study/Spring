@@ -6,9 +6,9 @@ build/
 !**/src/test/**/build/
 **/.yml
 **/.properties
-<<<<<<< HEAD
+
 **.html
-=======
+
 src/main/resources/static/
 
 ### STS ###
@@ -43,4 +43,4 @@ out/
 .vscode/
 /src/main/resources/application.yml
 /src/main/resources/application-dev.yml
-/src/main/resources/application-depl.yml
+/src/main/resources/application-dep.yml

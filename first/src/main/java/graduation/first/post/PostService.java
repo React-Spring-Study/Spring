@@ -19,8 +19,10 @@ public class PostService {
 
     @Transactional
     public Long savePost(PostSaveRequestDto saveDto) {
-        Category category = categoryRepository.findById(saveDto.getCategoryId()).orElseThrow(() -> new RuntimeException());
-        User writer = userRepository.findById(saveDto.getWriterId()).orElseThrow(() -> new RuntimeException());
+        Category category = categoryRepository.findById(saveDto.getCategoryId())
+                .orElseThrow(() -> new PostException(PostErrorCode.CATEGORY_NOT_FOUND));
+        User writer = userRepository.findById(saveDto.getWriterId())
+                .orElseThrow(() -> new PostException(PostErrorCode.WRITER_NOT_FOUND));
 
         Post post = Post.builder()
                 .title(saveDto.getTitle())
@@ -36,7 +38,8 @@ public class PostService {
 
     @Transactional
     public PostResponseDto readOnePost(Long postId) {
-        Post findOne = postRepository.findById(postId).orElseThrow(() -> new RuntimeException());
+        Post findOne = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
         User writer = findOne.getWriter();
         return new PostResponseDto(findOne.getId(),
                 findOne.getTitle(),
