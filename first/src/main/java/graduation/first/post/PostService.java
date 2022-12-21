@@ -39,6 +39,12 @@ public class PostService {
     }
 
     @Transactional
+    public PostListVO readPosts() {
+        List<Post> all = postRepository.findAll();
+        return PostListVO.toResponseDto(all);
+    }
+
+    @Transactional
     public PostListVO readPostsByCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException());

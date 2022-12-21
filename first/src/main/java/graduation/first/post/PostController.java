@@ -16,6 +16,11 @@ public class PostController {
         return "게시물 저장 성공";
     }
 
+    @GetMapping
+    public PostListVO getPostList() {
+        return postService.readPosts();
+    }
+
     @GetMapping("/{categoryId}")
     public PostListVO getPostListByCategory(@PathVariable Long categoryId) {
         return postService.readPostsByCategory(categoryId);
