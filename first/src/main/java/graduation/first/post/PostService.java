@@ -56,4 +56,11 @@ public class PostService {
         findOne.update(updateDto.getTitle(), updateDto.getContent(), category);
         return postId;
     }
+
+    @Transactional
+    public void deletePost(Long postId) {
+        Post findOne = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
+        postRepository.delete(findOne);
+    }
 }
