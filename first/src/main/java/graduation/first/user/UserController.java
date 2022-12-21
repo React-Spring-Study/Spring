@@ -1,6 +1,7 @@
 package graduation.first.user;
 
 import graduation.first.common.response.ApiResponse;
+import graduation.first.post.PostListVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,4 +23,7 @@ public class UserController {
 
         return ApiResponse.success("userInfo", responseDto);
     }
+
+    @GetMapping("/me/posts")
+    public PostListVO getMyposts() {}
 }
