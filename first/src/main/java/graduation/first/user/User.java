@@ -1,5 +1,6 @@
 package graduation.first.user;
 
+import graduation.first.common.domain.BaseTimeEntity;
 import graduation.first.oauth.entity.Provider;
 import graduation.first.oauth.entity.Role;
 import lombok.*;
@@ -10,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
