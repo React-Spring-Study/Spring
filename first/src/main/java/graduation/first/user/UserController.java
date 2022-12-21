@@ -14,7 +14,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("/me")
     public ApiResponse getUser() {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.getUser(principal.getUsername());
