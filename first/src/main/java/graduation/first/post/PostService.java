@@ -1,6 +1,8 @@
 package graduation.first.post;
 
 import graduation.first.category.Category;
+import graduation.first.category.CategoryErrorCode;
+import graduation.first.category.CategoryException;
 import graduation.first.category.CategoryRepository;
 import graduation.first.user.User;
 import graduation.first.user.UserInfo;
@@ -47,7 +49,7 @@ public class PostService {
     @Transactional
     public PostListVO readPostsByCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         List<Post> postList = postRepository.findAllByCategory(category);
         return PostListVO.toResponseDto(postList);
     }
