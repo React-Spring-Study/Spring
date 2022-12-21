@@ -3,6 +3,8 @@ package graduation.first.user;
 import graduation.first.post.Post;
 import graduation.first.post.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,5 +21,5 @@ public class UserService {
         return userRepository.findByUserId(userId);
     }
 
-    public List<Post> getMyPostLists(User writer) {return postRepository.findAllByWriter(writer); }
+    public Page<Post> getMyPostLists(User writer, Pageable pageable) {return postRepository.findAllByWriter(writer, pageable); }
 }

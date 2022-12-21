@@ -2,6 +2,10 @@ package graduation.first.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -14,5 +18,9 @@ public class PostResponseVO {
 
     public static PostResponseVO toVo(Post post) {
         return new PostResponseVO(post.getId(), post.getTitle(), post.getWriter().getName());
+    }
+
+    public static Page<PostResponseVO> toVoList(Page<Post> entities) {
+        return entities.map(m -> toVo(m));
     }
 }

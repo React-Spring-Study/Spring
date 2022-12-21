@@ -1,6 +1,8 @@
 package graduation.first.post;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,9 +18,14 @@ public class PostController {
         return "게시물 저장 성공";
     }
 
+    @GetMapping
+    public Page<PostResponseVO> getPostList(Pageable pageable) {
+        return postService.readPosts(pageable);
+    }
+
     @GetMapping("/{categoryId}")
-    public PostListVO getPostListByCategory(@PathVariable Long categoryId) {
-        return postService.readPostsByCategory(categoryId);
+    public Page<PostResponseVO> getPostListByCategory(@PathVariable Long categoryId, Pageable pageable) {
+        return postService.readPostsByCategory(categoryId, pageable);
     }
 
     @GetMapping("/{postId}")

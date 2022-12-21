@@ -3,7 +3,10 @@ package graduation.first.user;
 import graduation.first.common.response.ApiResponse;
 import graduation.first.post.Post;
 import graduation.first.post.PostListVO;
+import graduation.first.post.PostResponseVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +29,10 @@ public class UserController {
     }
 
     @GetMapping("/me/posts")
-    public PostListVO getMyPosts() {
+    public Page<PostResponseVO> getMyPosts(Pageable pageable) {
         User user = findLoggingInUser();
-        List<Post> myPostLists = userService.getMyPostLists(user);
-        return PostListVO.toResponseDto(myPostLists);
+        Page<Post> myPostLists = userService.getMyPostLists(user, pageable);
+        return PostResponseVO.toVoList(myPostLists);
     }
 
     private User findLoggingInUser() {
