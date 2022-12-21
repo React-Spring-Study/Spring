@@ -1,6 +1,7 @@
 package graduation.first.post;
 
 import graduation.first.category.Category;
+import graduation.first.common.domain.BaseTimeEntity;
 import graduation.first.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class Post extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "post_id")
