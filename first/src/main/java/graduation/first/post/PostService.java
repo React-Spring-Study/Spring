@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -37,6 +39,14 @@ public class PostService {
     }
 
     @Transactional
+    public PostListVO readPostsByCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException());
+        List<Post> postList = postRepository.findAllByCategory(category);
+        return PostListVO.toResponseDto(postList);
+    }
+
+    @Transactional
     public PostResponseDto readOnePost(Long postId) {
         Post findOne = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
@@ -46,5 +56,21 @@ public class PostService {
                 findOne.getContent(),
                 new UserInfo(writer.getId(), writer.getName(), writer.getEmail(), writer.getProfileImg()),
                 findOne.getCategory().getId());
+    }
+
+    @Transactional
+    public Long updatePost(Long postId, PostUpdateRequestDto updateDto) {
+        Post findOne = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
+        Category category = categoryRepository.findByName(updateDto.getCategoryName());
+        findOne.update(updateDto.getTitle(), updateDto.getContent(), category);
+        return postId;
+    }
+
+    @Transactional
+    public void deletePost(Long postId) {
+        Post findOne = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
+        postRepository.delete(findOne);
     }
 }
