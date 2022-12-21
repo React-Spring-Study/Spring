@@ -11,11 +11,11 @@ import java.util.List;
 public class PostListVO {
     List<PostResponseVO> postResponseDtoList;
 
-    public static PostListVO toResponseDto(List<Post> entities) {
+    public static List<PostResponseVO> toResponseDto(List<Post> entities) {
         List<PostResponseVO> responseVOList = new ArrayList<>();
         for (Post post: entities) {
             responseVOList.add(PostResponseVO.toVo(post));
         }
-        return new PostListVO(responseVOList);
+        return responseVOList;
     }
 }

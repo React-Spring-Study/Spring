@@ -8,6 +8,8 @@ import graduation.first.user.User;
 import graduation.first.user.UserInfo;
 import graduation.first.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,17 +43,17 @@ public class PostService {
     }
 
     @Transactional
-    public PostListVO readPosts() {
-        List<Post> all = postRepository.findAll();
-        return PostListVO.toResponseDto(all);
+    public Page<PostResponseVO> readPosts(Pageable pageable) {
+        Page<Post> all = postRepository.findAll(pageable);
+        return PostResponseVO.toVoList(all);
     }
 
     @Transactional
-    public PostListVO readPostsByCategory(Long categoryId) {
+    public Page<PostResponseVO> readPostsByCategory(Long categoryId, Pageable pageable) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
-        List<Post> postList = postRepository.findAllByCategory(category);
-        return PostListVO.toResponseDto(postList);
+        Page<Post> postList = postRepository.findAllByCategory(category, pageable);
+        return PostResponseVO.toVoList(postList);
     }
 
     @Transactional
