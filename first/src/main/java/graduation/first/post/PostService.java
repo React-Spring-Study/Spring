@@ -30,7 +30,7 @@ public class PostService {
     @Transactional
     public Long savePost(UserAdapter userAdapter, PostSaveRequestDto saveDto) {
         User writer = userAdapter.getUser();
-        Category category = categoryRepository.findById(saveDto.getCategoryId())
+        Category category = categoryRepository.findByName(saveDto.getCategoryName())
                 .orElseThrow(() -> new PostException(PostErrorCode.CATEGORY_NOT_FOUND));
 
         Post post = Post.builder()
@@ -52,8 +52,8 @@ public class PostService {
     }
 
     @Transactional
-    public Page<PostResponseVO> readPostsByCategory(Long categoryId, Pageable pageable) {
-        Category category = categoryRepository.findById(categoryId)
+    public Page<PostResponseVO> readPostsByCategory(String categoryName, Pageable pageable) {
+        Category category = categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         Page<Post> postList = postRepository.findAllByCategory(category, pageable);
         return PostResponseVO.toVoList(postList);
@@ -73,7 +73,8 @@ public class PostService {
         checkWriterAuth(userAdapter, updateDto.getWriter());
         Post findOne = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
-        Category category = categoryRepository.findByName(updateDto.getCategoryName());
+        Category category = categoryRepository.findByName(updateDto.getCategoryName())
+                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         findOne.update(updateDto.getTitle(), updateDto.getContent(), category);
         return postId;
     }
