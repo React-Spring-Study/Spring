@@ -20,7 +20,7 @@ public class PostSaveRequestDto {
     private String content;
 
     @NotNull
-    private Long categoryId;
+    private String categoryName;
 
 //TODO:    @NotNull
 //    private Long writerId;
