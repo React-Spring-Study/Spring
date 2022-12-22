@@ -45,8 +45,7 @@ public class PostService {
 
     @Transactional
     public Page<PostResponseVO> readPosts(Pageable pageable) {
-        Page<Post> all = postRepository.findAll(pageable);
-        return PostResponseVO.toVoList(all);
+        return PostResponseVO.toVoList(postRepository.findAll(pageable));
     }
 
     @Transactional

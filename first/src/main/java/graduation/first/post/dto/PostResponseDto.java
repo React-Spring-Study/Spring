@@ -6,6 +6,8 @@ import graduation.first.user.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @AllArgsConstructor
 public class PostResponseDto {
@@ -17,6 +19,7 @@ public class PostResponseDto {
     private String content;
     private UserInfo writerInfo;
     private String categoryName;
+    private LocalDateTime createdDate;
 
     public static PostResponseDto toDto(Post post) {
         User writer = post.getWriter();
@@ -24,7 +27,8 @@ public class PostResponseDto {
                 post.getTitle(),
                 post.getContent(),
                 new UserInfo(writer.getId(), writer.getName(), writer.getEmail(), writer.getProfileImg()),
-                post.getCategory().getName());
+                post.getCategory().getName(),
+                post.getCreatedDate());
     }
 
 }
