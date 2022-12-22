@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  bulidAndTest:
+  bulid:
     name: Github Action CD
     runs-on: ubuntu-latest
     env:
