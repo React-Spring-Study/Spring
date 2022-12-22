@@ -1,6 +1,6 @@
 package graduation.first.oauth.entity;
 
-import graduation.first.user.User;
+import graduation.first.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

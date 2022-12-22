@@ -4,16 +4,21 @@ import graduation.first.category.Category;
 import graduation.first.category.CategoryErrorCode;
 import graduation.first.category.CategoryException;
 import graduation.first.category.CategoryRepository;
-import graduation.first.user.User;
-import graduation.first.user.UserInfo;
-import graduation.first.user.UserRepository;
+import graduation.first.oauth.entity.UserAdapter;
+import graduation.first.post.dto.PostResponseDto;
+import graduation.first.post.dto.PostResponseVO;
+import graduation.first.post.dto.PostSaveRequestDto;
+import graduation.first.post.dto.PostUpdateRequestDto;
+import graduation.first.post.exception.PostErrorCode;
+import graduation.first.post.exception.PostException;
+import graduation.first.user.domain.User;
+import graduation.first.user.exception.UserErrorCode;
+import graduation.first.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,14 +26,12 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
 
     @Transactional
-    public Long savePost(PostSaveRequestDto saveDto) {
+    public Long savePost(UserAdapter userAdapter, PostSaveRequestDto saveDto) {
+        User writer = userAdapter.getUser();
         Category category = categoryRepository.findById(saveDto.getCategoryId())
                 .orElseThrow(() -> new PostException(PostErrorCode.CATEGORY_NOT_FOUND));
-        User writer = userRepository.findById(saveDto.getWriterId())
-                .orElseThrow(() -> new PostException(PostErrorCode.WRITER_NOT_FOUND));
 
         Post post = Post.builder()
                 .title(saveDto.getTitle())
@@ -60,16 +63,14 @@ public class PostService {
     public PostResponseDto readOnePost(Long postId) {
         Post findOne = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
-        User writer = findOne.getWriter();
-        return new PostResponseDto(findOne.getId(),
-                findOne.getTitle(),
-                findOne.getContent(),
-                new UserInfo(writer.getId(), writer.getName(), writer.getEmail(), writer.getProfileImg()),
-                findOne.getCategory().getId());
+        return PostResponseDto.toDto(findOne);
     }
 
     @Transactional
-    public Long updatePost(Long postId, PostUpdateRequestDto updateDto) {
+    public Long updatePost(UserAdapter userAdapter,
+                           Long postId,
+                           PostUpdateRequestDto updateDto) {
+        checkWriterAuth(userAdapter, updateDto.getWriter());
         Post findOne = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
         Category category = categoryRepository.findByName(updateDto.getCategoryName());
@@ -78,9 +79,15 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(UserAdapter userAdapter, Long postId) {
         Post findOne = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
+        checkWriterAuth(userAdapter, findOne.getWriter());
         postRepository.delete(findOne);
+    }
+
+    private void checkWriterAuth(UserAdapter userAdapter, User writer) {
+        if(userAdapter.getUser()!= writer)
+            throw new UserException(UserErrorCode.USER_NOT_PERMITTED);
     }
 }

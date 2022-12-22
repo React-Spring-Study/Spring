@@ -1,8 +1,8 @@
 package graduation.first.oauth.service;
 
-import graduation.first.oauth.entity.UserPrincipal;
-import graduation.first.user.User;
-import graduation.first.user.UserRepository;
+import graduation.first.oauth.entity.UserAdapter;
+import graduation.first.user.domain.User;
+import graduation.first.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +22,7 @@ public class PrincipalUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Cannot find username");
         }
-        return UserPrincipal.create(user);
+//TODO:       return UserPrincipal.create(user);
+        return new UserAdapter(user);
     }
 }

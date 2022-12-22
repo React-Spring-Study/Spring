@@ -2,8 +2,8 @@ package graduation.first.user;
 
 import graduation.first.common.response.ApiResponse;
 import graduation.first.post.Post;
-import graduation.first.post.PostListVO;
-import graduation.first.post.PostResponseVO;
+import graduation.first.post.dto.PostResponseVO;
+import graduation.first.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,8 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")

@@ -1,4 +1,4 @@
-package graduation.first.post;
+package graduation.first.user.exception;
 
 import graduation.first.common.response.ErrorEntity;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
-public class PostExceptionHandler {
+public class UserExceptionHandler {
 
-    @ExceptionHandler(PostException.class)
+
+    @ExceptionHandler(UserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorEntity postException(PostException ex) {
-        log.error("Post Exception({}) - {}", ex.getErrorCode(), ex.getErrorMessage());
+    public ErrorEntity userException(UserException ex) {
+        log.error("User Exception({}) - {}", ex.getErrorCode(), ex.getErrorMessage());
         return new ErrorEntity(ex.getErrorCode().toString(), ex.getErrorMessage());
     }
 }

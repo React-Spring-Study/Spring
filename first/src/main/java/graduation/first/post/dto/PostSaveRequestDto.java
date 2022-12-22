@@ -1,4 +1,4 @@
-package graduation.first.post;
+package graduation.first.post.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,6 +22,6 @@ public class PostSaveRequestDto {
     @NotNull
     private Long categoryId;
 
-    @NotNull
-    private Long writerId;
+//TODO:    @NotNull
+//    private Long writerId;
 }
