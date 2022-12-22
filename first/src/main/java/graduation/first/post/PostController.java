@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public String createPost(@AuthenticationPrincipal UserAdapter user, @RequestBody PostSaveRequestDto saveDto) {
+    public String createPost(@AuthenticationPrincipal UserAdapter user, @Valid @RequestBody PostSaveRequestDto saveDto) {
         postService.savePost(user, saveDto);
         return "게시물 저장 성공";
     }
@@ -42,7 +44,7 @@ public class PostController {
     @PutMapping("/{postId}")
     public String updatePost(@AuthenticationPrincipal UserAdapter user,
                              @PathVariable Long postId,
-                             @RequestBody PostUpdateRequestDto updateDto) {
+                             @Valid @RequestBody PostUpdateRequestDto updateDto) {
         postService.updatePost(user, postId, updateDto);
         return "게시물 수정 성공";
     }
