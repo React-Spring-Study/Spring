@@ -5,17 +5,12 @@ import graduation.first.category.CategoryErrorCode;
 import graduation.first.category.CategoryException;
 import graduation.first.category.CategoryRepository;
 import graduation.first.oauth.entity.UserAdapter;
-import graduation.first.oauth.entity.UserPrincipal;
-import graduation.first.user.User;
-import graduation.first.user.UserInfo;
-import graduation.first.user.UserRepository;
+import graduation.first.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -73,8 +68,7 @@ public class PostService {
     public Long updatePost(UserAdapter userAdapter,
                            Long postId,
                            PostUpdateRequestDto updateDto) {
-        if(userAdapter.getUser()!=updateDto.getWriter())
-            throw new RuntimeException();
+        checkWriterAuth(userAdapter, updateDto.getWriter());
         Post findOne = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
         Category category = categoryRepository.findByName(updateDto.getCategoryName());
@@ -83,9 +77,15 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(UserAdapter userAdapter, Long postId) {
         Post findOne = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
+        checkWriterAuth(userAdapter, findOne.getWriter());
         postRepository.delete(findOne);
+    }
+
+    private void checkWriterAuth(UserAdapter userAdapter, User writer) {
+        if(userAdapter.getUser()!= writer)
+            throw new UserException(UserErrorCode.USER_NOT_PERMITTED);
     }
 }
