@@ -4,6 +4,8 @@ import graduation.first.category.Category;
 import graduation.first.category.CategoryErrorCode;
 import graduation.first.category.CategoryException;
 import graduation.first.category.CategoryRepository;
+import graduation.first.oauth.entity.UserAdapter;
+import graduation.first.oauth.entity.UserPrincipal;
 import graduation.first.user.User;
 import graduation.first.user.UserInfo;
 import graduation.first.user.UserRepository;
@@ -24,11 +26,10 @@ public class PostService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long savePost(PostSaveRequestDto saveDto) {
+    public Long savePost(UserAdapter userAdapter, PostSaveRequestDto saveDto) {
+        User writer = userAdapter.getUser();
         Category category = categoryRepository.findById(saveDto.getCategoryId())
                 .orElseThrow(() -> new PostException(PostErrorCode.CATEGORY_NOT_FOUND));
-        User writer = userRepository.findById(saveDto.getWriterId())
-                .orElseThrow(() -> new PostException(PostErrorCode.WRITER_NOT_FOUND));
 
         Post post = Post.builder()
                 .title(saveDto.getTitle())

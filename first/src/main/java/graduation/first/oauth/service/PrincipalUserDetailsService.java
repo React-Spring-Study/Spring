@@ -1,5 +1,6 @@
 package graduation.first.oauth.service;
 
+import graduation.first.oauth.entity.UserAdapter;
 import graduation.first.oauth.entity.UserPrincipal;
 import graduation.first.user.User;
 import graduation.first.user.UserRepository;
@@ -22,6 +23,7 @@ public class PrincipalUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Cannot find username");
         }
-        return UserPrincipal.create(user);
+//TODO:       return UserPrincipal.create(user);
+        return new UserAdapter(user);
     }
 }

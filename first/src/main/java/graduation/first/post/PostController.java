@@ -1,8 +1,12 @@
 package graduation.first.post;
 
+import graduation.first.oauth.entity.UserAdapter;
+import graduation.first.oauth.entity.UserPrincipal;
+import graduation.first.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,8 +17,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public String createPost(@RequestBody PostSaveRequestDto saveDto) {
-        postService.savePost(saveDto);
+    public String createPost(@AuthenticationPrincipal UserAdapter user, @RequestBody PostSaveRequestDto saveDto) {
+        postService.savePost(user, saveDto);
         return "게시물 저장 성공";
     }
 
