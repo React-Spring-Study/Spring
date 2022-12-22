@@ -21,7 +21,4 @@ public class PostSaveRequestDto {
 
     @NotNull
     private String categoryName;
-
-//TODO:    @NotNull
-//    private Long writerId;
 }
