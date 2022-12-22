@@ -1,4 +1,4 @@
-package graduation.first.post;
+package graduation.first.post.exception;
 
 import graduation.first.common.response.ErrorEntity;
 import lombok.RequiredArgsConstructor;

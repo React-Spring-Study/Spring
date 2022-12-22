@@ -2,7 +2,7 @@ package graduation.first.post;
 
 import graduation.first.category.Category;
 import graduation.first.common.domain.BaseTimeEntity;
-import graduation.first.user.User;
+import graduation.first.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

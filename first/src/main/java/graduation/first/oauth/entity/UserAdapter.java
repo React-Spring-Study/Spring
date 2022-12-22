@@ -9,9 +9,9 @@ import java.util.List;
 
 @Getter
 public class UserAdapter extends User implements Serializable {
-    private graduation.first.user.User user;
+    private graduation.first.user.domain.User user;
 
-    public UserAdapter(graduation.first.user.User user) {
+    public UserAdapter(graduation.first.user.domain.User user) {
         super(user.getUserId(),
                 "pw1234",
                 List.of(new SimpleGrantedAuthority(user.getRole().toString())));

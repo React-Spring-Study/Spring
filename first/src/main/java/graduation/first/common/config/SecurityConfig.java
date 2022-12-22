@@ -1,7 +1,5 @@
-package graduation.first.security;
+package graduation.first.common.config;
 
-import graduation.first.common.config.AppProperties;
-import graduation.first.common.config.CorsProperties;
 import graduation.first.oauth.entity.Role;
 import graduation.first.oauth.exception.RestAuthenticationEntryPoint;
 import graduation.first.oauth.handler.OAuth2AuthenticationFailureHandler;
@@ -12,7 +10,7 @@ import graduation.first.oauth.service.PrincipalOAuth2UserService;
 import graduation.first.oauth.service.PrincipalUserDetailsService;
 import graduation.first.oauth.token.AuthTokenProvider;
 import graduation.first.oauth.token.TokenAuthenticationFilter;
-import graduation.first.user.UserRefreshTokenRepository;
+import graduation.first.user.repository.UserRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

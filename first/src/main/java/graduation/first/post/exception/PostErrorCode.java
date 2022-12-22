@@ -1,4 +1,4 @@
-package graduation.first.post;
+package graduation.first.post.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

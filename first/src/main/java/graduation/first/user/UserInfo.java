@@ -1,5 +1,6 @@
 package graduation.first.user;
 
+import graduation.first.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

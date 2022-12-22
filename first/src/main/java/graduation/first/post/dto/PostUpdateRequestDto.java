@@ -1,6 +1,6 @@
-package graduation.first.post;
+package graduation.first.post.dto;
 
-import graduation.first.user.User;
+import graduation.first.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

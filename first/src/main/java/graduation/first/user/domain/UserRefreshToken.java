@@ -1,4 +1,4 @@
-package graduation.first.user;
+package graduation.first.user.domain;
 
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;

@@ -1,4 +1,4 @@
-package graduation.first.post;
+package graduation.first.post.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

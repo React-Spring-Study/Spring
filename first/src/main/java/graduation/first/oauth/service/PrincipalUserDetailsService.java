@@ -1,9 +1,8 @@
 package graduation.first.oauth.service;
 
 import graduation.first.oauth.entity.UserAdapter;
-import graduation.first.oauth.entity.UserPrincipal;
-import graduation.first.user.User;
-import graduation.first.user.UserRepository;
+import graduation.first.user.domain.User;
+import graduation.first.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

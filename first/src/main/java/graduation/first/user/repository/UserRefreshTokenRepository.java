@@ -1,5 +1,6 @@
-package graduation.first.user;
+package graduation.first.user.repository;
 
+import graduation.first.user.domain.UserRefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRefreshTokenRepository extends JpaRepository<UserRefreshToken, Long> {

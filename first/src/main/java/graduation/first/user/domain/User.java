@@ -1,4 +1,4 @@
-package graduation.first.user;
+package graduation.first.user.domain;
 
 import graduation.first.common.domain.BaseTimeEntity;
 import graduation.first.oauth.entity.Provider;
