@@ -16,7 +16,7 @@ public class PostResponseDto {
     private String title;
     private String content;
     private UserInfo writerInfo;
-    private Long categoryId;
+    private String categoryName;
 
     public static PostResponseDto toDto(Post post) {
         User writer = post.getWriter();
@@ -24,7 +24,7 @@ public class PostResponseDto {
                 post.getTitle(),
                 post.getContent(),
                 new UserInfo(writer.getId(), writer.getName(), writer.getEmail(), writer.getProfileImg()),
-                post.getCategory().getId());
+                post.getCategory().getName());
     }
 
 }
