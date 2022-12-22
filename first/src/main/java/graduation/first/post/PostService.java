@@ -18,7 +18,6 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     public Long savePost(UserAdapter userAdapter, PostSaveRequestDto saveDto) {
@@ -56,12 +55,7 @@ public class PostService {
     public PostResponseDto readOnePost(Long postId) {
         Post findOne = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
-        User writer = findOne.getWriter();
-        return new PostResponseDto(findOne.getId(),
-                findOne.getTitle(),
-                findOne.getContent(),
-                new UserInfo(writer.getId(), writer.getName(), writer.getEmail(), writer.getProfileImg()),
-                findOne.getCategory().getId());
+        return PostResponseDto.toDto(findOne);
     }
 
     @Transactional

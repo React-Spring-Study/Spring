@@ -22,6 +22,6 @@ public class PostSaveRequestDto {
     @NotNull
     private Long categoryId;
 
-//TODO: 지우기    @NotNull
+//TODO:    @NotNull
 //    private Long writerId;
 }
