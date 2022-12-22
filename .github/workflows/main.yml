@@ -10,22 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: ./first
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2.6.0
-        - name: Setup Java JDK
-          uses: actions/setup-java@v3.9.0
-          with:
-            java-version: "11"
-            distribution: "temurin"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.6.0
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.9.0
+        with:
+          java-version: "11"
+          distribution: "temurin"
             
-        - name: Gradle execute permission for gradlew
-          run: chmod +x gradlew
-          shell: bash
-          working-directory: ${{env.working-directory}}
+      - name: Gradle execute permission for gradlew
+        run: chmod +x gradlew
+        shell: bash
+        working-directory: ${{env.working-directory}}
           
-        - name: Build with Gradle
-          run: ./gradlew bootjar
-          shell: bash
-          working-directory: ${{env.working-directory}}
+      - name: Build with Gradle
+        run: ./gradlew bootjar
+        shell: bash
+        working-directory: ${{env.working-directory}}
         
