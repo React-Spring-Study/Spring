@@ -70,7 +70,11 @@ public class PostService {
     }
 
     @Transactional
-    public Long updatePost(Long postId, PostUpdateRequestDto updateDto) {
+    public Long updatePost(UserAdapter userAdapter,
+                           Long postId,
+                           PostUpdateRequestDto updateDto) {
+        if(userAdapter.getUser()!=updateDto.getWriter())
+            throw new RuntimeException();
         Post findOne = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
         Category category = categoryRepository.findByName(updateDto.getCategoryName());

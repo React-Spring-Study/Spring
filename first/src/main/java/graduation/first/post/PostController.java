@@ -38,8 +38,10 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public String updatePost(@PathVariable Long postId, @RequestBody PostUpdateRequestDto updateDto) {
-        postService.updatePost(postId, updateDto);
+    public String updatePost(@AuthenticationPrincipal UserAdapter user,
+                             @PathVariable Long postId,
+                             @RequestBody PostUpdateRequestDto updateDto) {
+        postService.updatePost(user, postId, updateDto);
         return "게시물 수정 성공";
     }
 
