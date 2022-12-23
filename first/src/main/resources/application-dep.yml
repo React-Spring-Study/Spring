@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: local
   datasource:
     url: ${datasource}
     driver-class-name: org.mariadb.jdbc.Driver
