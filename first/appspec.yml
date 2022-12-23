@@ -4,7 +4,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ec2-user/first-deploy
+    destination: /home/ec2-user/first-deploy/
     overwrite: yes
 
 permissions:
