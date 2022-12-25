@@ -2,7 +2,6 @@ package graduation.first.common.controller;
 
 import graduation.first.common.response.StringResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
