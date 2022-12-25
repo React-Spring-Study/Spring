@@ -11,7 +11,6 @@ import graduation.first.oauth.service.PrincipalUserDetailsService;
 import graduation.first.oauth.token.AuthTokenProvider;
 import graduation.first.oauth.token.TokenAuthenticationFilter;
 import graduation.first.user.repository.UserRefreshTokenRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -78,7 +77,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                //.dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.FORWARD).permitAll()
                 .antMatchers(HttpMethod.GET, "/oauth2/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
                 .antMatchers("/", "/v1/auth/login", "/v1/login/**").permitAll()
