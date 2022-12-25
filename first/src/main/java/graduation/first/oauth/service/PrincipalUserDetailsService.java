@@ -22,7 +22,6 @@ public class PrincipalUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Cannot find username");
         }
-//TODO:       return UserPrincipal.create(user);
         return new UserAdapter(user);
     }
 }
