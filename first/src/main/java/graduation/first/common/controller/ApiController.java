@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ApiController {
 
-    private final Environment environment;
-
     @GetMapping("/api/health")
     public String healthCheck() {
         return "Health Checked";
