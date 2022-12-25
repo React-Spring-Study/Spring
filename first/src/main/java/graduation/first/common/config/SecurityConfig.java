@@ -48,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final PrincipalOAuth2UserService oAuth2UserService;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -64,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
+
                 .and()
                 .headers().frameOptions().disable()
 
@@ -71,8 +73,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
+                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
                 .accessDeniedHandler(tokenAccessDeniedHandler)
 
                 .and()
@@ -83,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/v1/posts/**", "/v1/users").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
 
                 .and()
                 .oauth2Login()
@@ -102,10 +105,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .successHandler(oAuth2AuthenticationSuccessHandler())
                 .failureHandler(oAuth2AuthenticationFailureHandler());
-
-
-        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
     }
 
     @Override
