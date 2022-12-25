@@ -26,12 +26,12 @@ jobs:
       - name: make application-aws.properties
         if: true # branch가 develop일 때
         run: |
-          # spring의 resources 경로로 이동
-          cd ./src/main/resources
-          touch ./application.yml
+          # application.yml 빈 파일 생성
+          touch ./src/main/resources/application.yml
           # GitHub-Actions에서 설정한 값을 application.yml 파일에 쓰기
-          echo "${{ secrets.APPICATION }}" > ./application.yml
+          echo "${{ secrets.APPICATION }}" > ./src/main/resources/application.yml
         shell: bash
+        working-directory: ${{ env.working-directory }}
             
       - name: Gradle execute permission for gradlew
         run: chmod +x gradlew
