@@ -82,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/v1/posts/**", "/v1/users/**").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
 
                 .and()
                 .oauth2Login()
