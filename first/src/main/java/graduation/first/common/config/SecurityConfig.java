@@ -76,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.FORWARD).permitAll()
+                //.dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.FORWARD).permitAll()
                 .antMatchers(HttpMethod.GET, "/oauth2/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
                 .antMatchers("/v1/auth/login", "/v1/login/**").permitAll()
