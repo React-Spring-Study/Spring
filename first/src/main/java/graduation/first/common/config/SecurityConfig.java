@@ -79,7 +79,7 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/oauth2/**","/**/oauth2/code/**").permitAll()
+                .antMatchers("/oauth2/**","/**/oauth2/code/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
                 .antMatchers("/", "/auth/**", "/v1/auth/**", "/v1/login/**").permitAll()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
