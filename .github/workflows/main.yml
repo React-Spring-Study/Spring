@@ -3,29 +3,63 @@ name: toy-deploy
 on:
   push:
     branches: [main]
+    
+env:
+  S3_BUCKET_NAME: firstbucket-jihyun
+  PROJECT_NAME: toy-deploy
 
 jobs:
-  bulidAndTest:
+  bulid:
     name: Github Action CD
     runs-on: ubuntu-latest
     env:
       working-directory: ./first
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2.6.0
-        - name: Setup Java JDK
-          uses: actions/setup-java@v3.9.0
-          with:
-            java-version: "11"
-            distribution: "temurin"
-            
-        - name: Gradle execute permission for gradlew
-          run: chmod +x gradlew
-          shell: bash
-          working-directory: ${{env.working-directory}}
+      application: ${{ secrets.APPLICATION }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.6.0
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.9.0
+        with:
+          java-version: "11"
+          distribution: "temurin"
           
-        - name: Build with Gradle
-          run: ./gradlew bootjar
-          shell: bash
-          working-directory: ${{env.working-directory}}
+      - name: make application-aws.properties
+        if: true # branch가 develop일 때
+        run: |
+          # application.yml 빈 파일 생성
+          touch ./src/main/resources/application.yml
+          # GitHub-Actions에서 설정한 값을 application.yml 파일에 쓰기
+          echo "${{ env.application }}" > ./src/main/resources/application.yml
+        shell: bash
+        working-directory: ${{ env.working-directory }}
+            
+      - name: Gradle execute permission for gradlew
+        run: chmod +x gradlew
+        shell: bash
+        working-directory: ${{ env.working-directory }}
+          
+      - name: Build with Gradle
+        run: ./gradlew bootjar
+        shell: bash
+        working-directory: ${{ env.working-directory }}
         
+      - name: Make zip file
+        run: zip -r ./$GITHUB_SHA.zip .
+        shell: bash
+        working-directory: ${{ env.working-directory }}
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
+        working-directory: ${{ env.working-directory }}
+        
+      - name: Code Deploy 
+        run: aws deploy create-deployment --application-name first-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name first-graduation-deploy --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
+
