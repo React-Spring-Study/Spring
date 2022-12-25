@@ -13,6 +13,6 @@ public class ApiController {
 
     @GetMapping("/api/health")
     public String healthCheck() {
-        return "Health Checking";
+        return "Health Checked";
     }
 }
