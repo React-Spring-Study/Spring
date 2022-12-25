@@ -26,6 +26,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
@@ -61,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors()
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.NEVER)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
                 .headers().frameOptions().disable()
@@ -76,10 +78,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.FORWARD).permitAll()
+                //.dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.FORWARD).permitAll()
                 .antMatchers(HttpMethod.GET, "/oauth2/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
-                .antMatchers("/v1/auth/login", "/v1/login/**").permitAll()
+                .antMatchers("/", "/v1/auth/login", "/v1/login/**").permitAll()
                 //.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/v1/posts/**", "/v1/users", "/v1/auth/refresh").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
@@ -139,8 +141,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
