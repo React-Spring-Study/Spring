@@ -36,8 +36,8 @@ import javax.servlet.DispatcherType;
 import java.util.Arrays;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+//@EnableWebSecurity
+//@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -77,11 +77,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/oauth2/**","/login/oauth2/code/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/oauth2/**","/**/oauth2/code/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
-                .antMatchers("/**", "/v1/auth/login", "/v1/login/**").permitAll()
+                .antMatchers("/", "/v1/auth/**", "/v1/login/**").permitAll()
                 //.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/v1/posts/**", "/v1/users", "/v1/auth/refresh").hasAnyAuthority(Role.USER.getCode())
+                .antMatchers("/v1/posts/**", "/v1/users").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
                 .anyRequest().authenticated()
 
