@@ -22,6 +22,16 @@ jobs:
         with:
           java-version: "11"
           distribution: "temurin"
+          
+      - name: make application-aws.properties
+        if: true # branch가 develop일 때
+        run: |
+          # spring의 resources 경로로 이동
+          cd ./src/main/resources
+          touch ./application.yml
+          # GitHub-Actions에서 설정한 값을 application.yml 파일에 쓰기
+          echo "${{ secrets.APPICATION }}" > ./application.yml
+        shell: bash
             
       - name: Gradle execute permission for gradlew
         run: chmod +x gradlew
