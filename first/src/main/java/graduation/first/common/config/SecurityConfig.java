@@ -16,8 +16,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,6 +27,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
@@ -32,11 +35,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-@Configuration
+//@Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+//@EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
     private final CorsProperties corsProperties;
     private final AppProperties appProperties;
@@ -46,15 +49,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
 
+    /**
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
+    }*/
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors()
                 .and()
                 .sessionManagement()
@@ -68,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
-                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                //.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .accessDeniedHandler(tokenAccessDeniedHandler)
@@ -100,12 +111,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .successHandler(oAuth2AuthenticationSuccessHandler())
                 .failureHandler(oAuth2AuthenticationFailureHandler());
+
+        http.authenticationProvider(daoAuthenticationProvider());
+        http.apply(new JwtSecurityConfig(tokenProvider));
+
+        return http.build();
     }
 
-    @Override
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
