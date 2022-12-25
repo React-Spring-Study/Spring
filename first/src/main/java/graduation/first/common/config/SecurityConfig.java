@@ -25,14 +25,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.servlet.DispatcherType;
 import java.util.Arrays;
 
 @Configuration
@@ -82,10 +79,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/oauth2/**","/**/oauth2/code/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
                 .antMatchers("/", "/v1/auth/**", "/v1/login/**").permitAll()
-                //.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/v1/posts/**", "/v1/users").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
 
                 .and()
                 .oauth2Login()
