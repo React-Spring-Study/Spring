@@ -81,7 +81,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/oauth2/**","/**/oauth2/code/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
-                .antMatchers("/", "/auth/**", "/v1/auth/**", "/v1/login/**", "/api/**").permitAll()
+                .antMatchers("/", "/auth/**", "/v1/auth/**", "/v1/login/**", "/api/health").permitAll()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/v1/posts/**", "/v1/users/**").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
