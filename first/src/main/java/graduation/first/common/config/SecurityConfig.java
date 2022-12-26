@@ -146,7 +146,7 @@ public class SecurityConfig {
         corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
         corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
         corsConfig.setAllowCredentials(true);
-        corsConfig.setMaxAge(corsProperties.getMaxAge());
+        corsConfig.setMaxAge(corsConfig.getMaxAge());
 
         corsConfigurationSource.registerCorsConfiguration("/**", corsConfig);
         return corsConfigurationSource;
