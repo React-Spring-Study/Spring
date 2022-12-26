@@ -11,36 +11,27 @@ import graduation.first.oauth.service.PrincipalUserDetailsService;
 import graduation.first.oauth.token.AuthTokenProvider;
 import graduation.first.oauth.token.TokenAuthenticationFilter;
 import graduation.first.user.repository.UserRefreshTokenRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.servlet.DispatcherType;
 import java.util.Arrays;
 
-@Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
     private final CorsProperties corsProperties;
     private final AppProperties appProperties;
@@ -50,20 +41,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().headers().frameOptions().disable();
-
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
 
                 .and()
                 .headers().frameOptions().disable()
@@ -72,18 +64,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
+                //.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .accessDeniedHandler(tokenAccessDeniedHandler)
 
                 .and()
                 .authorizeRequests()
-                //.dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.FORWARD).permitAll()
-                .antMatchers(HttpMethod.GET, "/oauth2/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
-                .antMatchers("/", "/v1/auth/login", "/v1/login/**").permitAll()
-                //.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/v1/posts/**", "/v1/users", "/v1/auth/refresh").hasAnyAuthority(Role.USER.getCode())
+                .antMatchers("/api/health").permitAll()
+                .antMatchers(HttpMethod.GET, "/v1/posts").permitAll()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .antMatchers("/v1/users", "/v1/auth").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
                 .anyRequest().authenticated()
 
@@ -95,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .redirectionEndpoint()
-                .baseUri("/*/oauth2/code/*")
+                .baseUri("/**/oauth2/code/**")
 
                 .and()
                 .userInfoEndpoint()
@@ -105,15 +96,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(oAuth2AuthenticationSuccessHandler())
                 .failureHandler(oAuth2AuthenticationFailureHandler());
 
+        http.authenticationProvider(daoAuthenticationProvider());
+        http.apply(new JwtSecurityConfig(tokenProvider));
 
-        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
+        return http.build();
     }
 
-    @Override
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
@@ -141,8 +132,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -155,7 +146,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
         corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
         corsConfig.setAllowCredentials(true);
-        corsConfig.setMaxAge(corsProperties.getMaxAge());
+        corsConfig.setMaxAge(corsConfig.getMaxAge());
 
         corsConfigurationSource.registerCorsConfiguration("/**", corsConfig);
         return corsConfigurationSource;
