@@ -2,6 +2,7 @@ package graduation.first.oauth.controller;
 
 import graduation.first.common.config.AppProperties;
 import graduation.first.common.response.ApiResponse;
+import graduation.first.common.response.StringResponse;
 import graduation.first.common.utils.CookieUtil;
 import graduation.first.oauth.entity.AuthReqModel;
 import graduation.first.oauth.entity.Role;
@@ -38,6 +39,12 @@ public class AuthController {
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
 
+    /**
+    @PostMapping("/login2")
+    public StringResponse loginV2(HttpServletRequest request,
+                                HttpServletResponse response,
+                                @RequestBody AuthReqModel authReqModel) {}
+**/
     @PostMapping("/login")
     @Transactional
     public ApiResponse login(HttpServletRequest request,
