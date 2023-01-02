@@ -69,14 +69,14 @@ public class SecurityConfig {
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .accessDeniedHandler(tokenAccessDeniedHandler)
 
-//                .and()
-//                .authorizeRequests()
- //               .antMatchers("/api/health").permitAll()
-//                .antMatchers("/v1/auth/**", "/oauth2/authorization/**", "/**/oauth2/code/**").permitAll()
-//                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/health").permitAll()
+                .antMatchers("/v1/auth/**", "/oauth2/authorization/**", "/**/oauth2/code/**").permitAll()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 //                .antMatchers("/v1/users", "/v1/posts/**").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
-//                .anyRequest().authenticated()
+                .anyRequest().authenticated()
 
                 .and()
                 .oauth2Login()
