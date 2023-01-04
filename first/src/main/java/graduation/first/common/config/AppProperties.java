@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Component
 @ConfigurationProperties(prefix = "app")
 public class AppProperties {
 
