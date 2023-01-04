@@ -72,7 +72,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/health").permitAll()
-                .antMatchers("/v1/auth/**", "/oauth2/authorization/**", "/**/oauth2/code/**").permitAll()
+                .antMatchers("/oauth2/authorization/**", "/**/oauth2/code/**").permitAll()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 //                .antMatchers("/v1/users", "/v1/posts/**").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
@@ -142,11 +142,11 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
 
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
-        corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
-        corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
+        corsConfig.addAllowedOrigin("*");
+        corsConfig.addAllowedMethod("*");
+        corsConfig.addAllowedHeader("*");
         corsConfig.setAllowCredentials(true);
-        corsConfig.setMaxAge(corsConfig.getMaxAge());
+        corsConfig.setMaxAge(3600L);
 
         corsConfigurationSource.registerCorsConfiguration("/**", corsConfig);
         return corsConfigurationSource;
