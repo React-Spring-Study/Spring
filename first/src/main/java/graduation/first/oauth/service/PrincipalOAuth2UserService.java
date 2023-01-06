@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -54,7 +55,6 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
     @Transactional
     public Map<Object, Object> showProfile(String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "Bearer " + token);
         String url = "https://www.googleapis.com/oauth2/v2/userinfo";
 
@@ -62,7 +62,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
             if (response.getStatusCode() == HttpStatus.OK)
-                return gson.fromJson(response.getBody(), Map.class);
+                return gson.fromJson(response.getBody(), HashMap.class);
         } catch (Exception e) {
             log.error(e.toString());
             throw new RuntimeException("!!!!");
