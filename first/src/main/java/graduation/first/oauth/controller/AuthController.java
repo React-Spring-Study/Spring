@@ -7,6 +7,8 @@ import graduation.first.common.utils.CookieUtil;
 import graduation.first.oauth.entity.AuthReqModel;
 import graduation.first.oauth.entity.Role;
 import graduation.first.oauth.entity.UserPrincipal;
+import graduation.first.oauth.info.OAuth2UserInfo;
+import graduation.first.oauth.service.PrincipalOAuth2UserService;
 import graduation.first.oauth.token.AuthToken;
 import graduation.first.oauth.token.AuthTokenProvider;
 import graduation.first.common.utils.HeaderUtil;
@@ -25,6 +27,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/auth")
@@ -35,16 +38,18 @@ public class AuthController {
     private final AuthTokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
+    private final PrincipalOAuth2UserService oAuth2UserService;
 
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
 
-    /**
-    @PostMapping("/login2")
+    @PostMapping("/loginV1")
     public StringResponse loginV2(HttpServletRequest request,
                                 HttpServletResponse response,
-                                @RequestBody AuthReqModel authReqModel) {}
-**/
+                                @RequestBody Map<String, String> tokenMap) {
+        Map<Object, Object> profileMap = oAuth2UserService.showProfile(tokenMap.get("access_token"));
+        return new StringResponse(profileMap.toString());
+    }
     @PostMapping("/login")
     @Transactional
     public ApiResponse login(HttpServletRequest request,
