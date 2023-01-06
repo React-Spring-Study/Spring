@@ -13,6 +13,7 @@ import graduation.first.oauth.token.TokenAuthenticationFilter;
 import graduation.first.user.repository.UserRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Configuration
 public class SecurityConfig {
 
     private final CorsProperties corsProperties;
@@ -71,10 +73,9 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/health").permitAll()
                 .antMatchers("/oauth2/authorization/**", "/**/oauth2/code/**").permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "**").permitAll()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 //                .antMatchers("/v1/users", "/v1/posts/**").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
                 .anyRequest().authenticated()
@@ -137,6 +138,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+/**
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
 
@@ -152,5 +154,6 @@ public class SecurityConfig {
         corsConfigurationSource.registerCorsConfiguration("/**", corsConfig);
         return corsConfigurationSource;
     }
+ **/
 
 }
