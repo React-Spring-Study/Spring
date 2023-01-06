@@ -1,5 +1,7 @@
 package graduation.first.oauth.service;
 
+import com.google.gson.Gson;
+import com.nimbusds.common.contenttype.ContentType;
 import graduation.first.oauth.entity.Provider;
 import graduation.first.oauth.entity.Role;
 import graduation.first.oauth.entity.UserPrincipal;
@@ -10,6 +12,8 @@ import graduation.first.oauth.info.OAuth2UserInfoFactory;
 import graduation.first.user.domain.User;
 import graduation.first.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.*;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -18,12 +22,19 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
+    private final RestTemplate restTemplate;
+    private final Gson gson;
 
     @Transactional
     @Override
@@ -38,6 +49,25 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
             ex.printStackTrace();
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
         }
+    }
+
+    @Transactional
+    public Map<Object, Object> showProfile(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Authorization", "Bearer " + token);
+        String url = "https://www.googleapis.com/oauth2/v2/userinfo";
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(null, headers);
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+            if (response.getStatusCode() == HttpStatus.OK)
+                return gson.fromJson(response.getBody(), Map.class);
+        } catch (Exception e) {
+            log.error(e.toString());
+            throw new RuntimeException("!!!!");
+        }
+        throw new RuntimeException("!!!");
     }
 
     private OAuth2User process(OAuth2UserRequest request, OAuth2User user) {
