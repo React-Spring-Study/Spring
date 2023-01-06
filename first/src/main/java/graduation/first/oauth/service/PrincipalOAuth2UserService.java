@@ -58,9 +58,9 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
         headers.set("Authorization", "Bearer " + token);
         String url = "https://www.googleapis.com/oauth2/v2/userinfo";
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(null, headers);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
             if (response.getStatusCode() == HttpStatus.OK)
                 return gson.fromJson(response.getBody(), HashMap.class);
         } catch (Exception e) {
