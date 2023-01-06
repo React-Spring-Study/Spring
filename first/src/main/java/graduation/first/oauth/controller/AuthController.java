@@ -44,7 +44,7 @@ public class AuthController {
     private final static String REFRESH_TOKEN = "refresh_token";
 
     @PostMapping("/loginV1")
-    public StringResponse loginV2(HttpServletRequest request,
+    public StringResponse loginV1(HttpServletRequest request,
                                 HttpServletResponse response,
                                 @RequestBody Map<String, String> tokenMap) {
         Map<Object, Object> profileMap = oAuth2UserService.showProfile(tokenMap.get("access_token"));
