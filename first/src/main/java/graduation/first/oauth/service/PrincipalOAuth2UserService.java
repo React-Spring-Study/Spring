@@ -9,6 +9,7 @@ import graduation.first.oauth.exception.OAuthErrorCode;
 import graduation.first.oauth.exception.OAuthException;
 import graduation.first.oauth.info.OAuth2UserInfo;
 import graduation.first.oauth.info.OAuth2UserInfoFactory;
+import graduation.first.user.UserSaveRequest;
 import graduation.first.user.domain.User;
 import graduation.first.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     @Transactional
-    public Map<Object, Object> showProfile(String token) {
+    public OAuth2User getGoogleProfile(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         String url = "https://www.googleapis.com/oauth2/v2/userinfo";
@@ -61,13 +62,31 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-            if (response.getStatusCode() == HttpStatus.OK)
-                return gson.fromJson(response.getBody(), HashMap.class);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                Map profile = gson.fromJson(response.getBody(), HashMap.class);
+                return this.process(Provider.GOOGLE, profile);
+            }
         } catch (Exception e) {
             log.error(e.toString());
-            throw new RuntimeException("!!!!");
+            throw new RuntimeException("exception!!");
         }
         throw new RuntimeException("!!!");
+    }
+
+    private OAuth2User process(Provider provider, Map<String, Object> attributes) {
+        // TODO:
+        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(provider, attributes);
+        User savedUser = userRepository.findByUserId(userInfo.getId());
+
+        if (savedUser != null) {
+            if (savedUser.getProvider() != provider)
+                throw new OAuthException(OAuthErrorCode.O_AUTH_PROVIDER_MISS_MATCH);
+            updateUser(savedUser, userInfo);
+        } else {
+            savedUser = createUser(userInfo, provider);
+        }
+
+        return UserPrincipal.create(savedUser, attributes);
     }
 
     private OAuth2User process(OAuth2UserRequest request, OAuth2User user) {

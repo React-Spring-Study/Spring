@@ -27,4 +27,6 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo{
     public String getImgUrl() {
         return (String) attributes.get("picture");
     }
+
+    //TODO: 이메일 안 오는지 확인
 }
