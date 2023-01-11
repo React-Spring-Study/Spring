@@ -53,13 +53,12 @@ public class AuthController {
                                 @RequestBody Map<String, String> tokenMap) {
         OAuth2User oAuth2User = oAuth2UserService.getGoogleProfile(tokenMap.get("access_token"));
 
+        log.info("OAuth2User: [name: {}, attributes: {}]", oAuth2User.getName(), oAuth2User.getAttributes());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         oAuth2User.getName(), tokenMap.get("id_token")
                 )
         );
-
-        log.info("OAuth2User: [name: {}, attributes: {}]", oAuth2User.getName(), oAuth2User.getAttributes());
         String userId = oAuth2User.getName();
         SecurityContextHolder.getContext().setAuthentication(authentication);
         Date now = new Date();
@@ -89,6 +88,8 @@ public class AuthController {
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
+
+        // TODO: 토큰을 헤더에도 추가해야 하는가
 
         return TokenResponseDto.toDto(accessToken);
     }

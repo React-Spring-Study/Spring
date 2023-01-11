@@ -115,6 +115,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
                 .profileImg(userInfo.getImgUrl())
                 .provider(provider)
                 .role(Role.USER)
+                .userId(userInfo.getId())
                 .build();
 
         return userRepository.save(newUser);
