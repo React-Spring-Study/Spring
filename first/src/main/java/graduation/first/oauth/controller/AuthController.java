@@ -56,10 +56,10 @@ public class AuthController {
         log.info("OAuth2User: [name: {}, attributes: {}]", oAuth2User.getName(), oAuth2User.getAttributes());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        oAuth2User.getName(), tokenMap.get("id_token")
+                        oAuth2User.getAttribute("id"), tokenMap.get("id_token")
                 )
         );
-        String userId = oAuth2User.getName();
+        String userId = oAuth2User.getAttribute("id");
         SecurityContextHolder.getContext().setAuthentication(authentication);
         Date now = new Date();
         AuthToken accessToken = tokenProvider.createAuthToken(
