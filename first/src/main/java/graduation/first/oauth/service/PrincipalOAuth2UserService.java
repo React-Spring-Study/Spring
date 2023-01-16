@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -108,9 +109,12 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 
     private User createUser(OAuth2UserInfo userInfo, Provider provider) {
 
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
         User newUser = User.builder()
                 .name(userInfo.getName())
                 .email(userInfo.getEmail())
+                .password(passwordEncoder.encode("pw1234"))
                 .emailVerifiedYn("Y")
                 .profileImg(userInfo.getImgUrl())
                 .provider(provider)
