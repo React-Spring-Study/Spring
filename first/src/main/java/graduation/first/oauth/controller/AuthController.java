@@ -58,13 +58,14 @@ public class AuthController {
 
         log.info("OAuth2User: [name: {}, attributes: {}]", oAuth2User.getName(), oAuth2User.getAttributes());
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String userId = oAuth2User.getName();
+        //TODO: 디비 저장 암호와 passwordEncoder.encode("pw1234") -> credentials
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        oAuth2User,
-                        passwordEncoder.encode("pw1234")
+                        userId,
+                        "pw1234"
                 )
         );
-        String userId = oAuth2User.getAttribute("id");
         SecurityContextHolder.getContext().setAuthentication(authentication);
         Date now = new Date();
         AuthToken accessToken = tokenProvider.createAuthToken(
