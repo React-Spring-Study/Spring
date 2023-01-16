@@ -31,7 +31,7 @@ public class PostService {
 
     @Transactional
     public Long savePost(UserAdapter userAdapter, PostSaveRequestDto saveDto) {
-        User writer = userAdapter.getUser();
+        User writer = userRepository.findByUserId(userAdapter.getUserId());
         Category category = categoryRepository.findByName(saveDto.getCategoryName())
                 .orElseThrow(() -> new PostException(PostErrorCode.CATEGORY_NOT_FOUND));
         Post post = Post.builder()
@@ -65,7 +65,7 @@ public class PostService {
                            Long postId,
                            PostUpdateRequestDto updateDto) {
         Post post = getPostById(postId);
-        checkWriterAuth(userAdapter, post.getWriter().getId());
+        checkWriterAuth(userAdapter, post.getWriter().getUserId());
         Category category = categoryRepository.findByName(updateDto.getCategoryName())
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         post.update(updateDto.getTitle(), updateDto.getContent(), category);
@@ -75,18 +75,17 @@ public class PostService {
     @Transactional
     public void deletePost(UserAdapter userAdapter, Long postId) {
         Post findOne = getPostById(postId);
-        checkWriterAuth(userAdapter, findOne.getWriter().getId());
+        checkWriterAuth(userAdapter, findOne.getWriter().getUserId());
         postRepository.delete(findOne);
     }
 
     private Post getPostById(Long postId) {
-        Post findOne = postRepository.findById(postId)
+        return postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
-        return findOne;
     }
 
-    private void checkWriterAuth(UserAdapter userAdapter, Long writerId) {
-        if(userAdapter.getUser().getId()!= writerId)
+    private void checkWriterAuth(UserAdapter userAdapter, String writerId) {
+        if(userAdapter.getUserId().equals(writerId))
             throw new UserException(UserErrorCode.USER_NOT_PERMITTED);
     }
 }
