@@ -20,6 +20,7 @@ public class User extends BaseTimeEntity {
     private String userId;
     private String name;
     private String email;
+    private String password;
     @NotNull
     private String emailVerifiedYn;
     private String profileImg;
@@ -29,10 +30,11 @@ public class User extends BaseTimeEntity {
     private Provider provider;
 
     @Builder
-    public User (String userId, String name, String email, String emailVerifiedYn, String profileImg, Role role, Provider provider) {
+    public User (String userId, String name, String email, String password, String emailVerifiedYn, String profileImg, Role role, Provider provider) {
         this.userId = userId;
         this.name = name;
         this.email =  email != null ? email : "NO_EMAIL";
+        this.password = password != null? password : "pw1234";
         this.emailVerifiedYn = emailVerifiedYn;
         this.profileImg = profileImg != null ? profileImg : "";
         this.role = role;
