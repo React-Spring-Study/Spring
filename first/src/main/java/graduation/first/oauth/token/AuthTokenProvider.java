@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import java.security.Key;
@@ -49,8 +50,9 @@ public class AuthTokenProvider {
                     .collect(Collectors.toList());
 
             log.debug("claims subject := [{}]", claims.getSubject());
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             User principal = new User(claims.getSubject(),
-                    "",
+                    passwordEncoder.encode("pw1234"),
                     authorities);
 
             return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
