@@ -14,7 +14,7 @@ public class UserAdapter extends User implements Serializable {
 
     public UserAdapter(graduation.first.user.domain.User user) {
         super(user.getUserId(),
-                PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("pw1234"),
+                user.getPassword(),
                 List.of(new SimpleGrantedAuthority(user.getRole().toString())));
         this.user = user;
     }

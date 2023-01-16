@@ -97,7 +97,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
     public static UserPrincipal create(User user) {
         return new UserPrincipal(
                 user.getUserId(),
-                PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("pw1234"),
+                user.getPassword(),
                 user.getProvider(),
                 Role.USER,
                 Collections.singletonList(new SimpleGrantedAuthority(Role.USER.getCode()))
