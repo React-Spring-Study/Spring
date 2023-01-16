@@ -60,7 +60,7 @@ public class AuthController {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        oAuth2User.getAttribute("id"),
+                        oAuth2User,
                         passwordEncoder.encode("pw1234")
                 )
         );
