@@ -57,7 +57,6 @@ public class AuthController {
         OAuth2User oAuth2User = oAuth2UserService.getGoogleProfile(tokenMap.get("access_token"));
 
         log.info("OAuth2User: [name: {}, attributes: {}]", oAuth2User.getName(), oAuth2User.getAttributes());
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String userId = oAuth2User.getName();
         //TODO: 디비 저장 암호와 passwordEncoder.encode("pw1234") -> credentials
         Authentication authentication = authenticationManager.authenticate(
@@ -68,11 +67,14 @@ public class AuthController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         Date now = new Date();
+
         AuthToken accessToken = tokenProvider.createAuthToken(
                 userId,
                 ((UserPrincipal) authentication.getPrincipal()).getRole().getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
+
+        log.info("userId: {}, role: {}", userId, ((UserPrincipal) authentication.getPrincipal()).getRole().getCode());
 
         long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
         AuthToken refreshToken = tokenProvider.createAuthToken(
@@ -95,11 +97,12 @@ public class AuthController {
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
-        // TODO: 토큰을 헤더에도 추가해야 하는가
+        // TODO: 토큰 만료기한을 연장하고 싶으면 만료된 토큰을 넘겨야 할까 아님 리프레시 토큰을 넘겨야 할까
 
         return TokenResponseDto.toDto(accessToken);
     }
 
+    /**
     @PostMapping("/login")
     @Transactional
     public ApiResponse login(HttpServletRequest request,
@@ -144,6 +147,7 @@ public class AuthController {
 
         return ApiResponse.success("token", accessToken.getToken());
     }
+     **/
 
     @GetMapping("/refresh")
     @Transactional
