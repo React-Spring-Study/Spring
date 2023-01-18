@@ -31,7 +31,7 @@ public class PostService {
 
     @Transactional
     public Long savePost(UserAdapter userAdapter, PostSaveRequestDto saveDto) {
-        User writer = userRepository.findByUserId(userAdapter.getUserId());
+        User writer = userAdapter.getUser();
         Category category = categoryRepository.findByName(saveDto.getCategoryName())
                 .orElseThrow(() -> new PostException(PostErrorCode.CATEGORY_NOT_FOUND));
         Post post = Post.builder()
