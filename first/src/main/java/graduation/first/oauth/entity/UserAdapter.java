@@ -9,6 +9,7 @@ import java.util.Collections;
 
 @Getter
 public class UserAdapter extends UserPrincipal implements Serializable {
+    private User user;
 
     public UserAdapter(User user) {
         super(user.getUserId(),
@@ -16,5 +17,6 @@ public class UserAdapter extends UserPrincipal implements Serializable {
                 user.getProvider(),
                 user.getRole(),
                 Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getCode())));
+        this.user = user;
     }
 }
