@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Component
 public class AuthTokenProvider {
     private final Key key;
     private static final String AUTHORITIES_KEY = "role";
