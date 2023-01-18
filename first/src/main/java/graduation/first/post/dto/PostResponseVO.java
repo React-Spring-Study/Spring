@@ -22,6 +22,6 @@ public class PostResponseVO {
     }
 
     public static Page<PostResponseVO> toVoList(Page<Post> entities) {
-        return entities.map(m -> toVo(m));
+        return entities.map(PostResponseVO::toVo);
     }
 }
