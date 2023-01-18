@@ -52,9 +52,8 @@ public class AuthTokenProvider {
                     .collect(Collectors.toList());
 
             log.info("claims subject := [{}]", claims.getSubject());
-            PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
             User principal = new User(claims.getSubject(),
-                    passwordEncoder.encode("pw1234"),
+                    PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("pw1234"),
                     authorities);
 
             return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
