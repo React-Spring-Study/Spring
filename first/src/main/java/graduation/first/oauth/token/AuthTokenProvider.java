@@ -49,10 +49,10 @@ public class AuthTokenProvider {
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
 
-            log.debug("claims subject := [{}]", claims.getSubject());
+            log.info("claims subject := [{}]", claims.getSubject());
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             User principal = new User(claims.getSubject(),
-                    passwordEncoder.encode("pw1234"),
+                    "{bcrypt}"+passwordEncoder.encode("pw1234"),
                     authorities);
 
             return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);

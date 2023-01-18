@@ -112,7 +112,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
         User newUser = User.builder()
                 .name(userInfo.getName())
                 .email(userInfo.getEmail())
-                .password(passwordEncoder.encode("pw1234"))
+                .password("{bcrypt}"+passwordEncoder.encode("pw1234"))
                 .emailVerifiedYn("Y")
                 .profileImg(userInfo.getImgUrl())
                 .provider(provider)
