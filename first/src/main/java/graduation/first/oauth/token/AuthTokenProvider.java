@@ -3,14 +3,17 @@ package graduation.first.oauth.token;
 import graduation.first.oauth.exception.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -19,14 +22,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Component
 public class AuthTokenProvider {
-
     private final Key key;
     private static final String AUTHORITIES_KEY = "role";
 
     public AuthTokenProvider(String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        }
+    }
 
     public AuthToken createAuthToken(String id, Date expiry) {
         return new AuthToken(id, expiry, key);
@@ -50,9 +53,9 @@ public class AuthTokenProvider {
                     .collect(Collectors.toList());
 
             log.info("claims subject := [{}]", claims.getSubject());
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
             User principal = new User(claims.getSubject(),
-                    "{bcrypt}"+passwordEncoder.encode("pw1234"),
+                    passwordEncoder.encode("pw1234"),
                     authorities);
 
             return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
