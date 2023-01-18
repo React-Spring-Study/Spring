@@ -22,7 +22,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public StringResponse createPost(@AuthenticationPrincipal(expression = "#this == 'anonymousUser ? null : user") UserAdapter user,
+    public StringResponse createPost(@AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : user") UserAdapter user,
                                      @Valid @RequestBody PostSaveRequestDto saveDto) {
         postService.savePost(user, saveDto);
         return new StringResponse("게시물 저장 성공");
