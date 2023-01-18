@@ -1,7 +1,6 @@
 package graduation.first.oauth.service;
 
 import com.google.gson.Gson;
-import com.nimbusds.common.contenttype.ContentType;
 import graduation.first.oauth.entity.Provider;
 import graduation.first.oauth.entity.Role;
 import graduation.first.oauth.entity.UserPrincipal;
@@ -9,7 +8,6 @@ import graduation.first.oauth.exception.OAuthErrorCode;
 import graduation.first.oauth.exception.OAuthException;
 import graduation.first.oauth.info.OAuth2UserInfo;
 import graduation.first.oauth.info.OAuth2UserInfoFactory;
-import graduation.first.user.UserSaveRequest;
 import graduation.first.user.domain.User;
 import graduation.first.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

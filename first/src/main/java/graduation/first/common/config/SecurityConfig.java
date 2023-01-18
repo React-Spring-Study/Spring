@@ -59,7 +59,6 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-
                 .and()
                 .headers().frameOptions().disable()
 
