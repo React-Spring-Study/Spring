@@ -78,7 +78,7 @@ public class SecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/health").permitAll()
                 .antMatchers("/oauth2/authorization/**", "/**/oauth2/code/**", "/v1/auth/login/**").permitAll()
-//                .antMatchers("/v1/users", "/v1/posts/**").hasAnyAuthority(Role.USER.getCode())
+               .antMatchers("/v1/auth/refresh").hasAnyAuthority(Role.USER.getCode())
                 //TODO: uri 별 권한 추가
                 .anyRequest().authenticated()
 
