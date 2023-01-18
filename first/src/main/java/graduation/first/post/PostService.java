@@ -16,6 +16,7 @@ import graduation.first.user.exception.UserErrorCode;
 import graduation.first.user.exception.UserException;
 import graduation.first.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
@@ -31,6 +33,7 @@ public class PostService {
 
     @Transactional
     public Long savePost(UserAdapter userAdapter, PostSaveRequestDto saveDto) {
+        log.info("UserAdapter = {}",userAdapter.toString());
         User writer = userAdapter.getUser();
         Category category = categoryRepository.findByName(saveDto.getCategoryName())
                 .orElseThrow(() -> new PostException(PostErrorCode.CATEGORY_NOT_FOUND));
