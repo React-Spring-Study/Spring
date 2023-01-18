@@ -32,9 +32,8 @@ public class PostService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long savePost(UserAdapter userAdapter, PostSaveRequestDto saveDto) {
-        log.info("UserAdapter = {}",userAdapter.toString());
-        User writer = userAdapter.getUser();
+    public Long savePost(User writer, PostSaveRequestDto saveDto) {
+        log.info("New Post Writer = {}",writer.toString());
         Category category = categoryRepository.findByName(saveDto.getCategoryName())
                 .orElseThrow(() -> new PostException(PostErrorCode.CATEGORY_NOT_FOUND));
         Post post = Post.builder()
@@ -64,11 +63,11 @@ public class PostService {
     }
 
     @Transactional
-    public Long updatePost(UserAdapter userAdapter,
+    public Long updatePost(User writer,
                            Long postId,
                            PostUpdateRequestDto updateDto) {
         Post post = getPostById(postId);
-        checkWriterAuth(userAdapter, post.getWriter().getUserId());
+        checkWriterAuth(writer, post.getWriter().getUserId());
         Category category = categoryRepository.findByName(updateDto.getCategoryName())
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         post.update(updateDto.getTitle(), updateDto.getContent(), category);
@@ -76,9 +75,9 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(UserAdapter userAdapter, Long postId) {
+    public void deletePost(User writer, Long postId) {
         Post findOne = getPostById(postId);
-        checkWriterAuth(userAdapter, findOne.getWriter().getUserId());
+        checkWriterAuth(writer, findOne.getWriter().getUserId());
         postRepository.delete(findOne);
     }
 
@@ -87,8 +86,8 @@ public class PostService {
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
     }
 
-    private void checkWriterAuth(UserAdapter userAdapter, String writerId) {
-        if(userAdapter.getUserId().equals(writerId))
+    private void checkWriterAuth(User writer, String writerId) {
+        if(writer.getUserId().equals(writerId))
             throw new UserException(UserErrorCode.USER_NOT_PERMITTED);
     }
 }
