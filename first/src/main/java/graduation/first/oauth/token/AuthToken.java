@@ -73,6 +73,7 @@ public class AuthToken {
     public Claims getExpiredTokenClaims() {
         try {
             Jwts.parserBuilder()
+                    .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
