@@ -102,53 +102,6 @@ public class AuthController {
         return TokenResponseDto.toDto(accessToken);
     }
 
-    /**
-    @PostMapping("/login")
-    @Transactional
-    public ApiResponse login(HttpServletRequest request,
-                             HttpServletResponse response,
-                             @RequestBody AuthReqModel authReqModel) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authReqModel.getId(),
-                        authReqModel.getPassword()
-                )
-        );
-
-        String userId = authReqModel.getId();
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        Date now = new Date();
-        AuthToken accessToken = tokenProvider.createAuthToken(
-                userId,
-                ((UserPrincipal) authentication.getPrincipal()).getRole().getCode(),
-                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
-        );
-
-        long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
-        AuthToken refreshToken = tokenProvider.createAuthToken(
-                appProperties.getAuth().getTokenSecret(),
-                new Date(now.getTime() + refreshTokenExpiry)
-        );
-
-        //userId refresh token 으로 DB 확인
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userId);
-        if (userRefreshToken == null) {
-            // 없으면 새로 등록
-            userRefreshToken = new UserRefreshToken(userId, refreshToken.getToken());
-            userRefreshTokenRepository.save(userRefreshToken);
-        } else {
-            // DB에 refresh token 업데이트
-            userRefreshToken.setRefreshToken(refreshToken.getToken());
-        }
-
-        int cookieMaxAge = (int) refreshTokenExpiry / 60;
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
-
-        return ApiResponse.success("token", accessToken.getToken());
-    }
-     **/
-
     @GetMapping("/refresh")
     @Transactional
     public ApiResponse refreshToken(HttpServletRequest request, HttpServletResponse response) {

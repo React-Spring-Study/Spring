@@ -68,7 +68,6 @@ public class SecurityConfig {
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
-                //.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .accessDeniedHandler(tokenAccessDeniedHandler)
@@ -77,8 +76,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/health").permitAll()
-                .antMatchers("/oauth2/authorization/**", "/**/oauth2/code/**", "/v1/auth/login/**").permitAll()
-               .antMatchers("/v1/auth/refresh").hasAnyAuthority(Role.USER.getCode())
+                .antMatchers("/v1/auth/**").permitAll()
                 //TODO: uri 별 권한 추가
                 .anyRequest().authenticated()
 
