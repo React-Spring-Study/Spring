@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
-public class OAuthExceptionHandler {
+public class AuthExceptionHandler {
 
-    @ExceptionHandler(OAuthException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorEntity oAuthException(OAuthException ex) {
-        log.error("OAuth Exception({}) - {}", ex.getErrorCode(), ex.getErrorMessage());
+    @ExceptionHandler(AuthException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorEntity authException(AuthException ex) {
+        log.error("Auth Exception({}) - {}", ex.getErrorCode(), ex.getErrorMessage());
         return new ErrorEntity(ex.getErrorCode().toString(), ex.getErrorMessage());
     }
 }

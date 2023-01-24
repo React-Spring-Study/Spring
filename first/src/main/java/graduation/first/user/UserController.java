@@ -20,10 +20,10 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
-    public ApiResponse getUser() {
+    public UserInfo getUser() {
         User user = findLoggingInUser();
         UserInfo responseDto = UserInfo.toResponseDto(user);
-        return ApiResponse.success("userInfo", responseDto);
+        return responseDto;
     }
 
     @GetMapping("/me/posts")

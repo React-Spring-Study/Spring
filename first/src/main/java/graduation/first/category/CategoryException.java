@@ -1,6 +1,5 @@
 package graduation.first.category;
 
-import graduation.first.oauth.exception.OAuthErrorCode;
 import lombok.Getter;
 
 @Getter
