@@ -3,16 +3,16 @@ package graduation.first.oauth.exception;
 import lombok.Getter;
 
 @Getter
-public class OAuthException extends RuntimeException {
+public class AuthException extends RuntimeException {
 
-    private OAuthErrorCode errorCode;
+    private AuthErrorCode errorCode;
     private String errorMessage;
 
-    public OAuthException(OAuthErrorCode errorCode) {
+    public AuthException(AuthErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 
-    public OAuthException(OAuthErrorCode errorCode, String errorMessage) {
+    public AuthException(AuthErrorCode errorCode, String errorMessage) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }

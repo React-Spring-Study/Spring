@@ -18,7 +18,7 @@ public class ResponseAdvice implements ResponseBodyAdvice {
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         if (body instanceof ErrorEntity)
-            return ResponseUtil.error((ErrorEntity)body);
+            return ResponseUtil.error((ErrorEntity) body);
         return ResponseUtil.success(body);
     }
 }

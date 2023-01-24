@@ -2,12 +2,11 @@ package graduation.first.oauth.controller;
 
 import graduation.first.common.config.AppProperties;
 import graduation.first.common.response.ApiResponse;
-import graduation.first.common.response.StringResponse;
 import graduation.first.common.utils.CookieUtil;
-import graduation.first.oauth.entity.AuthReqModel;
 import graduation.first.oauth.entity.Role;
 import graduation.first.oauth.entity.UserPrincipal;
-import graduation.first.oauth.info.OAuth2UserInfo;
+import graduation.first.oauth.exception.AuthErrorCode;
+import graduation.first.oauth.exception.AuthException;
 import graduation.first.oauth.service.PrincipalOAuth2UserService;
 import graduation.first.oauth.token.AuthToken;
 import graduation.first.oauth.token.AuthTokenProvider;
@@ -22,9 +21,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -104,18 +100,18 @@ public class AuthController {
 
     @GetMapping("/refresh")
     @Transactional
-    public ApiResponse refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    public TokenResponseDto refreshToken(HttpServletRequest request, HttpServletResponse response) {
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);
         AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
         if(!authToken.validate()) {
-            return ApiResponse.invalidAccessToken();
+            throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         // expired access token 인지 확인
         Claims claims = authToken.getExpiredTokenClaims();
-        if( claims == null) {
-            return ApiResponse.notExpiredTokenYet();
+        if(claims == null) {
+            throw new AuthException(AuthErrorCode.NOT_EXPIRED_TOKEN_YET);
         }
 
         String userId = claims.getSubject();
@@ -127,13 +123,13 @@ public class AuthController {
                 .orElse(null);
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
         if (authRefreshToken.validate()) {
-            return ApiResponse.invalidRefreshToken();
+            throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         // userId refresh token 으로 DB 확인
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken);
         if (userRefreshToken == null) {
-            return ApiResponse.invalidRefreshToken();
+            throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         Date now = new Date();
@@ -160,6 +156,11 @@ public class AuthController {
             CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);
         }
 
-        return ApiResponse.success("token", newAccessToken.getToken());
+        return TokenResponseDto.toDto(newAccessToken);
+    }
+
+    @GetMapping("/unauthorized")
+    public void unauthorized() {
+        throw new AuthException(AuthErrorCode.UNAUTHORIZED);
     }
 }

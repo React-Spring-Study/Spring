@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import graduation.first.oauth.entity.Provider;
 import graduation.first.oauth.entity.Role;
 import graduation.first.oauth.entity.UserPrincipal;
-import graduation.first.oauth.exception.OAuthErrorCode;
-import graduation.first.oauth.exception.OAuthException;
+import graduation.first.oauth.exception.AuthErrorCode;
+import graduation.first.oauth.exception.AuthException;
 import graduation.first.oauth.info.OAuth2UserInfo;
 import graduation.first.oauth.info.OAuth2UserInfoFactory;
 import graduation.first.user.domain.User;
@@ -16,7 +16,6 @@ import org.springframework.http.*;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -80,7 +79,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 
         if (savedUser != null) {
             if (savedUser.getProvider() != provider)
-                throw new OAuthException(OAuthErrorCode.O_AUTH_PROVIDER_MISS_MATCH);
+                throw new AuthException(AuthErrorCode.AUTH_PROVIDER_MISS_MATCH);
             updateUser(savedUser, userInfo);
         } else {
             savedUser = createUser(userInfo, provider);
@@ -97,7 +96,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 
         if (savedUser != null) {
             if (savedUser.getProvider() != provider)
-                throw new OAuthException(OAuthErrorCode.O_AUTH_PROVIDER_MISS_MATCH);
+                throw new AuthException(AuthErrorCode.AUTH_PROVIDER_MISS_MATCH);
             updateUser(savedUser, userInfo);
         } else {
             savedUser = createUser(userInfo, provider);
