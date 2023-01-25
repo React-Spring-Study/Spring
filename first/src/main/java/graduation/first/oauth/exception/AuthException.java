@@ -10,6 +10,7 @@ public class AuthException extends RuntimeException {
 
     public AuthException(AuthErrorCode errorCode) {
         this.errorCode = errorCode;
+        this.errorMessage = errorCode.getDefaultErrorMessage();
     }
 
     public AuthException(AuthErrorCode errorCode, String errorMessage) {
