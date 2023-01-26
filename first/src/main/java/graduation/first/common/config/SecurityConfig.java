@@ -74,25 +74,24 @@ public class SecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/health").permitAll()
                 .antMatchers("/v1/auth/**").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().authenticated();
 
-                .and()
-                .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorization")
-                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+//                .and()
+//                .oauth2Login()
+//                .authorizationEndpoint()
+//                .baseUri("/oauth2/authorization")
+//                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
 
-                .and()
-                .redirectionEndpoint()
-                .baseUri("/*/oauth2/code/*")
+//                .and()
+//                .redirectionEndpoint()
+//                .baseUri("/*/oauth2/code/*")
+//                .and()
+//                .userInfoEndpoint()
+//                .userService(oAuth2UserService)
 
-                .and()
-                .userInfoEndpoint()
-                .userService(oAuth2UserService)
-
-                .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler())
-                .failureHandler(oAuth2AuthenticationFailureHandler());
+//                .and()
+//                .successHandler(oAuth2AuthenticationSuccessHandler())
+//                .failureHandler(oAuth2AuthenticationFailureHandler());
 
         http.authenticationProvider(daoAuthenticationProvider());
         http.apply(new JwtSecurityConfig(tokenProvider));
