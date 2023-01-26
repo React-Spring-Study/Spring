@@ -22,7 +22,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         authException.printStackTrace();
         log.info("Responding with unauthorized error. Message = {}", authException.getMessage());
 //        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getLocalizedMessage());
-        //TODO: 작동 확인
+        //TODO:
         response.sendRedirect("/v1/auth/unauthorized");
     }
 }
