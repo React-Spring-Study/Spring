@@ -1,10 +1,11 @@
-package graduation.first.post;
+package graduation.first.post.service;
 
 import graduation.first.category.Category;
 import graduation.first.category.CategoryErrorCode;
 import graduation.first.category.CategoryException;
 import graduation.first.category.CategoryRepository;
-import graduation.first.oauth.entity.UserAdapter;
+import graduation.first.post.domain.Post;
+import graduation.first.post.repository.PostRepository;
 import graduation.first.post.dto.PostResponseDto;
 import graduation.first.post.dto.PostResponseVO;
 import graduation.first.post.dto.PostSaveRequestDto;

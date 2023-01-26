@@ -1,5 +1,6 @@
-package graduation.first.post;
+package graduation.first.post.domain;
 
+import graduation.first.post.domain.Post;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

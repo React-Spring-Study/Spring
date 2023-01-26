@@ -1,7 +1,7 @@
 package graduation.first.user;
 
-import graduation.first.post.Post;
-import graduation.first.post.PostRepository;
+import graduation.first.post.domain.Post;
+import graduation.first.post.repository.PostRepository;
 import graduation.first.user.domain.User;
 import graduation.first.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

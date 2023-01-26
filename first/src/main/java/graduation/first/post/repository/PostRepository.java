@@ -1,6 +1,7 @@
-package graduation.first.post;
+package graduation.first.post.repository;
 
 import graduation.first.category.Category;
+import graduation.first.post.domain.Post;
 import graduation.first.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

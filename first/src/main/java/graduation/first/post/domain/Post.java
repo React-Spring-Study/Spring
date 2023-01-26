@@ -1,4 +1,4 @@
-package graduation.first.post;
+package graduation.first.post.domain;
 
 import graduation.first.category.Category;
 import graduation.first.common.domain.BaseTimeEntity;
