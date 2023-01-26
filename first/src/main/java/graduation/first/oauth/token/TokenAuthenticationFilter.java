@@ -22,7 +22,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthTokenProvider tokenProvider;
 
-    private static final List<String> EXCLUDE_URL = List.of("/v1/auth/**", "/api/health");
+    //private static final List<String> EXCLUDE_URL = List.of("/v1/auth/**", "/api/health");
 
     @Override
     protected void doFilterInternal(
@@ -41,9 +41,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
+/**
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return EXCLUDE_URL.stream().anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
     }
+    **/
 }
