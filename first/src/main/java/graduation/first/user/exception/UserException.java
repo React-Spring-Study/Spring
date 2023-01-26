@@ -10,6 +10,7 @@ public class UserException extends RuntimeException {
 
     public UserException(UserErrorCode errorCode) {
         this.errorCode = errorCode;
+        this.errorMessage = errorCode.getDefaultErrorMessage();
     }
 
     public UserException(UserErrorCode errorCode, String errorMessage) {

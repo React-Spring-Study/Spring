@@ -9,6 +9,7 @@ public class PostException extends RuntimeException{
 
     public PostException(PostErrorCode errorCode) {
         this.errorCode = errorCode;
+        this.errorMessage = errorCode.getDefaultErrorMessage();
     }
 
     public PostException(PostErrorCode errorCode, String errorMessage) {
