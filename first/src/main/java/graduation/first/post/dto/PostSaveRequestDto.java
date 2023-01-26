@@ -1,5 +1,6 @@
 package graduation.first.post.dto;
 
+import graduation.first.post.UploadFile;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,4 +23,5 @@ public class PostSaveRequestDto {
 
     @NotNull
     private String categoryName;
+    private String fileName;
 }
