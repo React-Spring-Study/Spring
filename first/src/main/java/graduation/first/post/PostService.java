@@ -14,7 +14,6 @@ import graduation.first.post.exception.PostException;
 import graduation.first.user.domain.User;
 import graduation.first.user.exception.UserErrorCode;
 import graduation.first.user.exception.UserException;
-import graduation.first.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
