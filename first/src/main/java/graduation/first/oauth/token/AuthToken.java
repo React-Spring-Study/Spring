@@ -72,7 +72,7 @@ public class AuthToken {
             throw new AuthException(AuthErrorCode.UNSUPPORTED_JWT_TOKEN);
         } catch (IllegalArgumentException e) {
             log.info("JWT token compact of handler are invalid.");
-            throw new AuthException(AuthErrorCode.UNAUTHORIZED, "Token 클레임을 받아올 수 없습니다.");
+            throw new AuthException(AuthErrorCode.UNAUTHORIZED, "Token 클레임을 받아올 수 없습니다.", e);
         }
     }
 
