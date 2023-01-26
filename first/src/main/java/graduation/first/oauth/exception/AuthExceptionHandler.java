@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class AuthExceptionHandler {
 
     @ExceptionHandler(AuthException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorEntity authException(AuthException ex) {
         log.error("Auth Exception({}) - {}", ex.getErrorCode(), ex.getErrorMessage());
         return new ErrorEntity(ex.getErrorCode().toString(), ex.getErrorMessage());
