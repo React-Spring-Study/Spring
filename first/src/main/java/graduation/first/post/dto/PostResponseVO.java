@@ -1,6 +1,6 @@
 package graduation.first.post.dto;
 
-import graduation.first.post.Post;
+import graduation.first.post.domain.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.domain.Page;

@@ -1,7 +1,6 @@
 package graduation.first.user;
 
-import graduation.first.common.response.ApiResponse;
-import graduation.first.post.Post;
+import graduation.first.post.domain.Post;
 import graduation.first.post.dto.PostResponseVO;
 import graduation.first.user.domain.User;
 import lombok.RequiredArgsConstructor;

@@ -1,17 +1,16 @@
 package graduation.first.post;
 
 import graduation.first.common.response.StringResponse;
-import graduation.first.oauth.entity.UserAdapter;
 import graduation.first.post.dto.PostResponseDto;
 import graduation.first.post.dto.PostResponseVO;
 import graduation.first.post.dto.PostSaveRequestDto;
 import graduation.first.post.dto.PostUpdateRequestDto;
+import graduation.first.post.service.PostService;
 import graduation.first.user.UserService;
 import graduation.first.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
