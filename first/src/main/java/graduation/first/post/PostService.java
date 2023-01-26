@@ -21,6 +21,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,10 +33,10 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
+    private final S3Service s3Service;
 
     @Transactional
-    public Long savePost(User writer, PostSaveRequestDto saveDto) {
+    public Long savePost(User writer, PostSaveRequestDto saveDto) throws IOException {
         log.info("New Post Writer = {}",writer.toString());
         Category category = categoryRepository.findByName(saveDto.getCategoryName())
                 .orElseThrow(() -> new PostException(PostErrorCode.CATEGORY_NOT_FOUND));
@@ -42,7 +46,11 @@ public class PostService {
                 .category(category)
                 .writer(writer)
                 .build();
-        return postRepository.save(post).getId();
+        Long id = postRepository.save(post).getId();
+        List<MultipartFile> files = saveDto.getFiles();
+        if (!files.isEmpty())
+            s3Service.uploadFile(post, files);
+        return id;
     }
 
     @Transactional
