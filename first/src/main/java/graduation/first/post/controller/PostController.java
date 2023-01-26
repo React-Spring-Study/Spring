@@ -1,4 +1,4 @@
-package graduation.first.post;
+package graduation.first.post.controller;
 
 import graduation.first.common.response.StringResponse;
 import graduation.first.post.dto.PostResponseDto;
