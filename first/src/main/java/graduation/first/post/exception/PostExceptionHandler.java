@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestControllerAdvice
 public class PostExceptionHandler {
 
