@@ -14,8 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/v1/posts")
@@ -26,7 +28,7 @@ public class PostController {
     private final UserService userService;
 
     @PostMapping
-    public StringResponse createPost(@Valid @RequestBody PostSaveRequestDto saveDto) {
+    public StringResponse createPost(@Valid @RequestPart PostSaveRequestDto saveDto) throws IOException {
         User user = findLoggingInUser();
         postService.savePost(user, saveDto);
         return new StringResponse("게시물 저장 성공");
