@@ -1,6 +1,5 @@
 package graduation.first.common.config;
 
-import graduation.first.oauth.entity.Role;
 import graduation.first.oauth.exception.RestAuthenticationEntryPoint;
 import graduation.first.oauth.handler.OAuth2AuthenticationFailureHandler;
 import graduation.first.oauth.handler.OAuth2AuthenticationSuccessHandler;
@@ -14,14 +13,12 @@ import graduation.first.user.repository.UserRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -77,7 +74,6 @@ public class SecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/health").permitAll()
                 .antMatchers("/v1/auth/**").permitAll()
-                //TODO: uri 별 권한 추가
                 .anyRequest().authenticated()
 
                 .and()
@@ -138,7 +134,6 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-/**
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
 
@@ -154,6 +149,5 @@ public class SecurityConfig {
         corsConfigurationSource.registerCorsConfiguration("/**", corsConfig);
         return corsConfigurationSource;
     }
- **/
 
 }
