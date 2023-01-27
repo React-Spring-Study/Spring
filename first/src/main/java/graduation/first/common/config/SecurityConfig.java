@@ -31,7 +31,6 @@ import java.util.Arrays;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
-@Configuration
 public class SecurityConfig {
 
     private final CorsProperties corsProperties;
@@ -55,16 +54,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-                .and()
                 .headers().frameOptions().disable()
 
                 .and()
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .accessDeniedHandler(tokenAccessDeniedHandler)
@@ -88,7 +87,6 @@ public class SecurityConfig {
 //                .and()
 //                .userInfoEndpoint()
 //                .userService(oAuth2UserService)
-
 //                .and()
 //                .successHandler(oAuth2AuthenticationSuccessHandler())
 //                .failureHandler(oAuth2AuthenticationFailureHandler());
