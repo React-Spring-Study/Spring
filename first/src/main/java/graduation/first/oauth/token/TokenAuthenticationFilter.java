@@ -22,7 +22,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthTokenProvider tokenProvider;
 
-    private static final List<String> EXCLUDE_URL = List.of("/v1/auth/unauthorized", "/api/health");
+    private static final List<String> EXCLUDE_URL = List.of("/v1/auth/**", "/api/health");
 
     @Override
     protected void doFilterInternal(
