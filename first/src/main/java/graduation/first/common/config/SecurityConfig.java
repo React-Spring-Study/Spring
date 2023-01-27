@@ -54,10 +54,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors()
                 .and()
-                .headers().frameOptions().disable()
+                .headers().frameOptions().disable();
 
-                .and()
-                .csrf().disable()
+
+        http.csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
                 .sessionManagement()
