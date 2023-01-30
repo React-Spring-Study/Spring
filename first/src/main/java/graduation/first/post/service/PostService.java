@@ -5,11 +5,10 @@ import graduation.first.category.CategoryErrorCode;
 import graduation.first.category.CategoryException;
 import graduation.first.category.CategoryRepository;
 import graduation.first.post.domain.Post;
+import graduation.first.post.domain.UploadFile;
+import graduation.first.post.dto.*;
+import graduation.first.post.repository.FileRepository;
 import graduation.first.post.repository.PostRepository;
-import graduation.first.post.dto.PostResponseDto;
-import graduation.first.post.dto.PostResponseVO;
-import graduation.first.post.dto.PostSaveRequestDto;
-import graduation.first.post.dto.PostUpdateRequestDto;
 import graduation.first.post.exception.PostErrorCode;
 import graduation.first.post.exception.PostException;
 import graduation.first.user.domain.User;
@@ -32,6 +31,7 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final FileRepository fileRepository;
     private final CategoryRepository categoryRepository;
     private final S3Service s3Service;
 
@@ -67,7 +67,9 @@ public class PostService {
 
     @Transactional
     public PostResponseDto readOnePost(Long postId) {
-        return PostResponseDto.toDto(getPostById(postId));
+        PostResponseDto responseDto = PostResponseDto.toDto(getPostById(postId));
+        responseDto.setFiles(UploadFileResponse.toResponseList(fileRepository.findAllByPostId(postId)));
+        return responseDto;
     }
 
     @Transactional

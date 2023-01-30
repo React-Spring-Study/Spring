@@ -2,12 +2,14 @@ package graduation.first.post.domain;
 
 import graduation.first.post.domain.Post;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class UploadFile {
 

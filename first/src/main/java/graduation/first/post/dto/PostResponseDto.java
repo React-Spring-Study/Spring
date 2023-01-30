@@ -5,12 +5,22 @@ import graduation.first.user.domain.User;
 import graduation.first.user.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-@AllArgsConstructor
 public class PostResponseDto {
+    public PostResponseDto(Long id, String title, String content, UserInfo writerInfo, String categoryName, LocalDateTime createdDate) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.writerInfo = writerInfo;
+        this.categoryName = categoryName;
+        this.createdDate = createdDate;
+    }
 
     // 하나씩 조회할 때 사용
 
@@ -20,6 +30,8 @@ public class PostResponseDto {
     private UserInfo writerInfo;
     private String categoryName;
     private LocalDateTime createdDate;
+    @Setter
+    private List<UploadFileResponse> files;
 
     public static PostResponseDto toDto(Post post) {
         User writer = post.getWriter();
