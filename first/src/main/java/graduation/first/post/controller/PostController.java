@@ -40,9 +40,9 @@ public class PostController {
         return postService.readPosts(pageable);
     }
 
-    @GetMapping("/{categoryName}")
-    public Page<PostResponseVO> getPostListByCategory(@PathVariable String categoryName, Pageable pageable) {
-        return postService.readPostsByCategory(categoryName, pageable);
+    @GetMapping("category/{categoryId}")
+    public Page<PostResponseVO> getPostListByCategory(@PathVariable Long categoryId, Pageable pageable) {
+        return postService.readPostsByCategory(categoryId, pageable);
     }
 
     @GetMapping("/{postId}")

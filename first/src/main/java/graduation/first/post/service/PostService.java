@@ -59,8 +59,8 @@ public class PostService {
     }
 
     @Transactional
-    public Page<PostResponseVO> readPostsByCategory(String categoryName, Pageable pageable) {
-        Category category = categoryRepository.findByName(categoryName)
+    public Page<PostResponseVO> readPostsByCategory(Long categoryId, Pageable pageable) {
+        Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         return PostResponseVO.toVoList(postRepository.findAllByCategory(category, pageable));
     }
