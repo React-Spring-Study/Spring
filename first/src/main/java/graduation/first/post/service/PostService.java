@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -68,7 +69,11 @@ public class PostService {
     @Transactional
     public PostResponseDto readOnePost(Long postId) {
         PostResponseDto responseDto = PostResponseDto.toDto(getPostById(postId));
-        responseDto.setFiles(UploadFileResponse.toResponseList(fileRepository.findAllByPostId(postId)));
+        List<UploadFile> entityList = fileRepository.findAllByPostId(postId);
+        if (!entityList.isEmpty())
+            responseDto.setFiles(UploadFileResponse.toResponseList(entityList));
+        else
+            responseDto.setFiles(new ArrayList<>());
         return responseDto;
     }
 
