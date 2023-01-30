@@ -13,9 +13,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/posts")
@@ -26,9 +28,10 @@ public class PostController {
     private final UserService userService;
 
     @PostMapping
-    public StringResponse createPost(@Valid @RequestPart PostSaveRequestDto saveDto) throws IOException {
+    public StringResponse createPost(@Valid @RequestPart PostSaveRequestDto saveDto,
+                                     List<MultipartFile> files) throws IOException {
         User user = findLoggingInUser();
-        postService.savePost(user, saveDto);
+        postService.savePost(user, saveDto, files);
         return new StringResponse("게시물 저장 성공");
     }
 
