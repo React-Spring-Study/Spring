@@ -108,7 +108,7 @@ public class AuthController {
         Claims claims = authToken.getExpiredTokenClaims();
 
         if(!authToken.validate() && claims==null) {
-            throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
+            throw new AuthException(AuthErrorCode.INVALID_ACCESS_TOKEN);
         }
 
         if(claims == null) {
@@ -121,14 +121,14 @@ public class AuthController {
         // refresh token
         String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
                 .map(Cookie::getValue)
-                .orElse(null);
+                .orElse("");
         log.info("refresh token from Cookie: {}", refreshToken);
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
-        if (authRefreshToken.validate()) {
+        if (!authRefreshToken.validate()) {
             throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
 
-        // userId refresh token 으로 DB 확인
+        // refresh token으로 DB에서 user 정보와 확인
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken);
         if (userRefreshToken == null) {
             throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
