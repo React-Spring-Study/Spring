@@ -1,6 +1,7 @@
 package graduation.first.post.controller;
 
 import graduation.first.common.response.StringResponse;
+import graduation.first.oauth.entity.UserPrincipal;
 import graduation.first.post.dto.PostResponseDto;
 import graduation.first.post.dto.PostResponseVO;
 import graduation.first.post.dto.PostSaveRequestDto;
@@ -66,7 +67,8 @@ public class PostController {
     }
 
     private User findLoggingInUser() {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.getUser(principal.getUsername());
         return user;
     }
