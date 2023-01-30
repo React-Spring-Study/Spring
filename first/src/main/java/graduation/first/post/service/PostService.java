@@ -5,11 +5,10 @@ import graduation.first.category.CategoryErrorCode;
 import graduation.first.category.CategoryException;
 import graduation.first.category.CategoryRepository;
 import graduation.first.post.domain.Post;
+import graduation.first.post.domain.UploadFile;
+import graduation.first.post.dto.*;
+import graduation.first.post.repository.FileRepository;
 import graduation.first.post.repository.PostRepository;
-import graduation.first.post.dto.PostResponseDto;
-import graduation.first.post.dto.PostResponseVO;
-import graduation.first.post.dto.PostSaveRequestDto;
-import graduation.first.post.dto.PostUpdateRequestDto;
 import graduation.first.post.exception.PostErrorCode;
 import graduation.first.post.exception.PostException;
 import graduation.first.user.domain.User;
@@ -24,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,11 +32,12 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final FileRepository fileRepository;
     private final CategoryRepository categoryRepository;
     private final S3Service s3Service;
 
     @Transactional
-    public Long savePost(User writer, PostSaveRequestDto saveDto) throws IOException {
+    public Long savePost(User writer, PostSaveRequestDto saveDto, List<MultipartFile> files) throws IOException {
         log.info("New Post Writer = {}",writer.toString());
         Category category = categoryRepository.findByName(saveDto.getCategoryName())
                 .orElseThrow(() -> new PostException(PostErrorCode.CATEGORY_NOT_FOUND));
@@ -47,7 +48,6 @@ public class PostService {
                 .writer(writer)
                 .build();
         Long id = postRepository.save(post).getId();
-        List<MultipartFile> files = saveDto.getFiles();
         if (!files.isEmpty())
             s3Service.uploadFile(post, files);
         return id;
@@ -67,7 +67,13 @@ public class PostService {
 
     @Transactional
     public PostResponseDto readOnePost(Long postId) {
-        return PostResponseDto.toDto(getPostById(postId));
+        PostResponseDto responseDto = PostResponseDto.toDto(getPostById(postId));
+        List<UploadFile> entityList = fileRepository.findAllByPostId(postId);
+        if (!entityList.isEmpty())
+            responseDto.setFiles(UploadFileResponse.toResponseList(entityList));
+        else
+            responseDto.setFiles(new ArrayList<>());
+        return responseDto;
     }
 
     @Transactional
