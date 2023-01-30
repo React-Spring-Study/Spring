@@ -104,12 +104,13 @@ public class AuthController {
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);
         AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
-        if(!authToken.validate()) {
+        // expired access token 인지 확인
+        Claims claims = authToken.getExpiredTokenClaims();
+
+        if(!authToken.validate() && claims!=null) {
             throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
 
-        // expired access token 인지 확인
-        Claims claims = authToken.getExpiredTokenClaims();
         if(claims == null) {
             throw new AuthException(AuthErrorCode.NOT_EXPIRED_TOKEN_YET);
         }
