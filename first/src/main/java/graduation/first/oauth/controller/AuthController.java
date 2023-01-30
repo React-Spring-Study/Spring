@@ -122,6 +122,7 @@ public class AuthController {
         String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
                 .map(Cookie::getValue)
                 .orElse(null);
+        log.info("refresh token from Cookie: {}", refreshToken);
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
         if (authRefreshToken.validate()) {
             throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
