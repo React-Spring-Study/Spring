@@ -107,7 +107,7 @@ public class AuthController {
         // expired access token 인지 확인
         Claims claims = authToken.getExpiredTokenClaims();
 
-        if(!authToken.validate() && claims!=null) {
+        if(!authToken.validate() && claims==null) {
             throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
 
