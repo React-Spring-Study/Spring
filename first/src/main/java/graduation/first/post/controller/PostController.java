@@ -29,7 +29,7 @@ public class PostController {
 
     @PostMapping
     public StringResponse createPost(@Valid @RequestPart PostSaveRequestDto saveDto,
-                                     List<MultipartFile> files) throws IOException {
+                                     @RequestPart List<MultipartFile> files) throws IOException {
         User user = findLoggingInUser();
         postService.savePost(user, saveDto, files);
         return new StringResponse("게시물 저장 성공");
