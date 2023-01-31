@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class CategoryExceptionHandler {
 
-    @ExceptionHandler(AuthException.class)
+    @ExceptionHandler(CategoryException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorEntity oAuthException(AuthException ex) {
-        log.error("OAuth Exception({}) - {}", ex.getErrorCode(), ex.getErrorMessage());
+    public ErrorEntity categoryException(CategoryException ex) {
+        log.error("Category Exception({}) - {}", ex.getErrorCode(), ex.getErrorMessage());
         return new ErrorEntity(ex.getErrorCode().toString(), ex.getErrorMessage());
     }
 }
