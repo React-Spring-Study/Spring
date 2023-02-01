@@ -90,10 +90,9 @@ public class AuthController {
         }
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
+        log.info("cookieMaxAge= {}", cookieMaxAge);
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
-
-        // TODO: 토큰 만료기한을 연장하고 싶으면 만료된 토큰을 넘겨야 할까 아님 리프레시 토큰을 넘겨야 할까
 
         return TokenResponseDto.toDto(accessToken);
     }
@@ -107,21 +106,23 @@ public class AuthController {
         // expired access token 인지 확인
         Claims claims = authToken.getExpiredTokenClaims();
 
-        if(!authToken.validate() && claims==null) {
-            throw new AuthException(AuthErrorCode.INVALID_ACCESS_TOKEN);
-        }
-
         if(claims == null) {
-            throw new AuthException(AuthErrorCode.NOT_EXPIRED_TOKEN_YET);
+            if (!authToken.validate()){
+                throw new AuthException(AuthErrorCode.INVALID_ACCESS_TOKEN);
+            }
+            else {
+                throw new AuthException(AuthErrorCode.NOT_EXPIRED_TOKEN_YET);
+            }
         }
 
         String userId = claims.getSubject();
         Role role = Role.of(claims.get("role", String.class));
+        log.info("String userId = claims.getSubject(), userId={}", userId);
 
         // refresh token
         String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
                 .map(Cookie::getValue)
-                .orElse("");
+                .orElse((null));
         log.info("refresh token from Cookie: {}", refreshToken);
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
         if (!authRefreshToken.validate()) {
