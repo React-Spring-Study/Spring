@@ -60,7 +60,7 @@ public class AuthToken {
                     .getBody();
         } catch (SecurityException e) {
             log.info("Invalid JWT signature.");
-            throw new AuthException(AuthErrorCode.INVALID_TOKEN_SIGNATURE);
+            throw new AuthException(AuthErrorCode.INVALID_TOKEN_SIGNATURE, e);
         } catch (MalformedJwtException e) {
             log.info("Invalid JWT token.");
             throw new AuthException(AuthErrorCode.INVALID_ACCESS_TOKEN);
