@@ -1,7 +1,7 @@
 package graduation.first.oauth.controller;
 
+import com.amazonaws.services.kms.model.ConnectionErrorCodeType;
 import graduation.first.common.config.AppProperties;
-import graduation.first.common.response.ApiResponse;
 import graduation.first.common.utils.CookieUtil;
 import graduation.first.oauth.entity.Role;
 import graduation.first.oauth.entity.UserPrincipal;
@@ -11,9 +11,13 @@ import graduation.first.oauth.service.PrincipalOAuth2UserService;
 import graduation.first.oauth.token.AuthToken;
 import graduation.first.oauth.token.AuthTokenProvider;
 import graduation.first.common.utils.HeaderUtil;
-import graduation.first.oauth.token.TokenResponseDto;
+import graduation.first.oauth.token.TokenResponse;
+import graduation.first.user.domain.User;
 import graduation.first.user.domain.UserRefreshToken;
+import graduation.first.user.exception.UserErrorCode;
+import graduation.first.user.exception.UserException;
 import graduation.first.user.repository.UserRefreshTokenRepository;
+import graduation.first.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +29,11 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/auth")
@@ -42,14 +46,15 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final PrincipalOAuth2UserService oAuth2UserService;
+    private final UserRepository userRepository;
 
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
 
     @PostMapping("/login/google")
-    public TokenResponseDto loginV1(HttpServletRequest request,
-                                HttpServletResponse response,
-                                @RequestBody Map<String, String> tokenMap) {
+    public TokenResponse loginV1(HttpServletRequest request,
+                                 HttpServletResponse response,
+                                 @RequestBody Map<String, String> tokenMap) {
         OAuth2User oAuth2User = oAuth2UserService.getGoogleProfile(tokenMap.get("access_token"));
 
         log.info("OAuth2User: [name: {}, attributes: {}]", oAuth2User.getName(), oAuth2User.getAttributes());
@@ -89,22 +94,18 @@ public class AuthController {
             userRefreshToken.setRefreshToken(refreshToken.getToken());
         }
 
-        int cookieMaxAge = (int) refreshTokenExpiry / 60;
-        log.info("cookieMaxAge= {}", cookieMaxAge);
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
-
-        return TokenResponseDto.toDto(accessToken);
+        return TokenResponse.of(accessToken, refreshToken);
     }
 
-    @GetMapping("/refresh")
+    @GetMapping("/refresh/{id}")
     @Transactional
-    public TokenResponseDto refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        // access token 확인
-        String accessToken = HeaderUtil.getAccessToken(request);
-        AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
+    public TokenResponse refreshToken(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+        // refresh token 확인
+        String refreshToken = HeaderUtil.getAccessToken(request);
+        AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
+        /**
         // expired access token 인지 확인
-        Claims claims = authToken.getExpiredTokenClaims();
+        Claims claims = authRefToken.getExpiredTokenClaims();
 
         if(claims == null) {
             if (!authToken.validate()){
@@ -118,29 +119,34 @@ public class AuthController {
         String userId = claims.getSubject();
         Role role = Role.of(claims.get("role", String.class));
         log.info("String userId = claims.getSubject(), userId={}", userId);
-
         // refresh token
         String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
                 .map(Cookie::getValue)
                 .orElse((null));
-        log.info("refresh token from Cookie: {}", refreshToken);
+
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
+**/
         if (!authRefreshToken.validate()) {
             throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         // refresh token으로 DB에서 user 정보와 확인
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken);
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(id, refreshToken);
         if (userRefreshToken == null) {
             throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
 
+        User user = userRepository.findById(id)
+                .orElseThrow(()-> new UserException(UserErrorCode.USER_NOT_FOUND));
+
         Date now = new Date();
+
         AuthToken newAccessToken = tokenProvider.createAuthToken(
-                userId,
-                role.getCode(),
+                user.getUserId(),
+                user.getRole().getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
+
         long validTime = authRefreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
 
         // 토큰 만료기간이 3일 이하인 경우 refresh token 발급
@@ -151,15 +157,16 @@ public class AuthController {
                     appProperties.getAuth().getTokenSecret(),
                     new Date(now.getTime() + refreshTokenExpiry)
             );
-
             // DB에 토큰 업데이트
             userRefreshToken.setRefreshToken(authRefreshToken.getToken());
+/**
             int cookieMaxAge = (int) refreshTokenExpiry / 60;
             CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
             CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);
+ **/
         }
 
-        return TokenResponseDto.toDto(newAccessToken);
+        return TokenResponse.of(newAccessToken, authRefreshToken);
     }
 
     @GetMapping("/unauthorized")
