@@ -11,6 +11,7 @@ import graduation.first.oauth.service.PrincipalOAuth2UserService;
 import graduation.first.oauth.token.AuthToken;
 import graduation.first.oauth.token.AuthTokenProvider;
 import graduation.first.common.utils.HeaderUtil;
+import graduation.first.oauth.token.TokenReissueRequest;
 import graduation.first.oauth.token.TokenResponse;
 import graduation.first.user.domain.User;
 import graduation.first.user.domain.UserRefreshToken;
@@ -97,18 +98,23 @@ public class AuthController {
         return TokenResponse.of(accessToken, refreshToken);
     }
 
-    @GetMapping("/refresh/{id}")
+    @PostMapping("/refresh")
     @Transactional
-    public TokenResponse refreshToken(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+    public TokenResponse refreshToken(@RequestBody TokenReissueRequest reissueRequest,
+                                      HttpServletRequest request,
+                                      HttpServletResponse response) {
         // refresh token 확인
         String refreshToken = HeaderUtil.getAccessToken(request);
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
-        /**
+
+        // access token 확인
+        AuthToken expiredToken = tokenProvider.convertAuthToken(reissueRequest.getAccessToken());
+
         // expired access token 인지 확인
-        Claims claims = authRefToken.getExpiredTokenClaims();
+        Claims claims = expiredToken.getExpiredTokenClaims();
 
         if(claims == null) {
-            if (!authToken.validate()){
+            if (!expiredToken.validate()){
                 throw new AuthException(AuthErrorCode.INVALID_ACCESS_TOKEN);
             }
             else {
@@ -119,6 +125,7 @@ public class AuthController {
         String userId = claims.getSubject();
         Role role = Role.of(claims.get("role", String.class));
         log.info("String userId = claims.getSubject(), userId={}", userId);
+/**
         // refresh token
         String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
                 .map(Cookie::getValue)
@@ -131,10 +138,7 @@ public class AuthController {
         }
 
         // refresh token으로 DB에서 user 정보와 확인
-        User user = userRepository.findById(id)
-                .orElseThrow(()-> new UserException(UserErrorCode.USER_NOT_FOUND));
-
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(user.getUserId(), refreshToken);
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken);
         if (userRefreshToken == null) {
             throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
@@ -142,8 +146,8 @@ public class AuthController {
         Date now = new Date();
 
         AuthToken newAccessToken = tokenProvider.createAuthToken(
-                user.getUserId(),
-                user.getRole().getCode(),
+                userId,
+                role.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
 
