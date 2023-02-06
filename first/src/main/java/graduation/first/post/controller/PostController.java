@@ -10,6 +10,7 @@ import graduation.first.post.service.PostService;
 import graduation.first.user.UserService;
 import graduation.first.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/posts")
 @RequiredArgsConstructor
@@ -70,6 +72,7 @@ public class PostController {
     private User findLoggingInUser() {
 //        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("find Logging In UserId={}", authentication.getName());
         User user = userService.getUser(authentication.getName());
         return user;
     }
