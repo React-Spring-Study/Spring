@@ -112,17 +112,17 @@ public class AuthController {
 
         // expired access token 인지 확인
         Claims claims = expiredToken.getExpiredTokenClaims();
+        String userId = claims.getSubject();
 
-        if(claims == null) {
-            if (!expiredToken.validate()){
-                throw new AuthException(AuthErrorCode.INVALID_ACCESS_TOKEN);
-            }
-            else {
+        log.info("expired claims={}", userId);
+
+        if (claims == null) {
+            if (expiredToken.validate()){
                 throw new AuthException(AuthErrorCode.NOT_EXPIRED_TOKEN_YET);
             }
         }
 
-        String userId = claims.getSubject();
+//        String userId = claims.getSubject();
         Role role = Role.of(claims.get("role", String.class));
         log.info("String userId = claims.getSubject(), userId={}", userId);
 /**
@@ -139,8 +139,9 @@ public class AuthController {
 
         // refresh token으로 DB에서 user 정보와 확인
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken);
+        log.info("UserRefreshToken={}", refreshToken);
         if (userRefreshToken == null) {
-            throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
+            throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN, "로그아웃됨. 다시 로그인 필요");
         }
 
         Date now = new Date();
