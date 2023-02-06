@@ -26,10 +26,12 @@ public class AuthTokenProvider {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
+    //refresh token 발급용
     public AuthToken createAuthToken(String id, Date expiry) {
         return new AuthToken(id, expiry, key);
     }
 
+    //access token 발급용
     public AuthToken createAuthToken(String id, String role, Date expiry) {
         return new AuthToken(id, role, expiry, key);
     }
