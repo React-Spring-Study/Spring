@@ -19,7 +19,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/me")
+    @GetMapping("/info")
     public UserInfo getUser() {
         User user = findLoggingInUser();
         UserInfo responseDto = UserInfo.toResponseDto(user);
