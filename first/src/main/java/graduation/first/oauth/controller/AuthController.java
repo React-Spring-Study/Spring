@@ -112,6 +112,7 @@ public class AuthController {
 
         // expired access token 인지 확인
         Claims claims = expiredToken.getExpiredTokenClaims();
+        log.info("claims={}", claims.toString());
         String userId = claims.getSubject();
 
         log.info("expired claims={}", userId);
