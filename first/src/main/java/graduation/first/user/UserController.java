@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/users")
 @RequiredArgsConstructor
+@RequestMapping("/v1/users")
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/info")
+    @GetMapping("/me")
     public UserInfo getUser() {
         User user = findLoggingInUser();
         UserInfo responseDto = UserInfo.toResponseDto(user);
