@@ -53,6 +53,7 @@ public class AuthController {
     private final static String REFRESH_TOKEN = "refresh_token";
 
     @PostMapping("/login/google")
+    @Transactional
     public TokenResponse loginV1(HttpServletRequest request,
                                  HttpServletResponse response,
                                  @RequestBody Map<String, String> tokenMap) {
