@@ -68,7 +68,7 @@ public class PostController {
 
     private User findLoggingInUser() {
 //        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.getUser(principal.getUsername());
         return user;
     }
