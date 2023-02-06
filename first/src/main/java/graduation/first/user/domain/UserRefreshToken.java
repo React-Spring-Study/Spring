@@ -7,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
@@ -23,6 +22,7 @@ public class UserRefreshToken {
     @NotNull
     private String userId;
 
+    @Setter
     @Column(name="refresh_token")
     @NotNull
     private String refreshToken;
