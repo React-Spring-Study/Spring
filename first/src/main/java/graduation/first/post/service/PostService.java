@@ -101,9 +101,7 @@ public class PostService {
     }
 
     private void checkWriterAuth(User writer, String writerId) {
-        log.info("writer.getUserId()={}", writer.getUserId());
-        log.info("writerId={}", writerId);
-        if (writer.getUserId().equals(writerId))
+        if (!writer.getUserId().equals(writerId))
             throw new UserException(UserErrorCode.USER_NOT_PERMITTED);
     }
 }
