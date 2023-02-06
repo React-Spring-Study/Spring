@@ -139,6 +139,7 @@ public class AuthController {
 
         // refresh token으로 DB에서 user 정보와 확인
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken);
+        log.info("UserRefreshToken={}", refreshToken);
         if (userRefreshToken == null) {
             throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN, "로그아웃됨. 다시 로그인 필요");
         }
