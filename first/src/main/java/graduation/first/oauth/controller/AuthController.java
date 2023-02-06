@@ -113,18 +113,14 @@ public class AuthController {
 
         // expired access token 인지 확인
         Claims claims = expiredToken.getExpiredTokenClaims();
-        log.info("claims={}", claims.toString());
+        if (claims == null) {
+            throw new AuthException(AuthErrorCode.NOT_EXPIRED_TOKEN_YET);
+        } else {
+            log.info("claims={}", claims);
+        }
         String userId = claims.getSubject();
-
         log.info("expired claims={}", userId);
 
-        if (claims == null) {
-            if (expiredToken.validate()){
-                throw new AuthException(AuthErrorCode.NOT_EXPIRED_TOKEN_YET);
-            }
-        }
-
-//        String userId = claims.getSubject();
         Role role = Role.of(claims.get("role", String.class));
         log.info("String userId = claims.getSubject(), userId={}", userId);
 /**
